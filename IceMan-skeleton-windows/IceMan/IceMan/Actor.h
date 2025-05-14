@@ -3,6 +3,7 @@
 
 #include "GraphObject.h"
 
+<<<<<<< Updated upstream
 class Actor {
 	public:
 		virtual ~Actor();
@@ -10,6 +11,12 @@ class Actor {
 
 		private:
 			
+=======
+class Actor : public GraphObject{
+public:
+	GraphObject(int imageID, int startX, int startY, Direction dir = right, double size = 1.0, unsigned int depth = 0)
+	virtual ~Actor();
+>>>>>>> Stashed changes
 };
 
 
@@ -53,26 +60,50 @@ class Protester : public Human {
 
 
 class Boulder : public Solid {
+<<<<<<< Updated upstream
 	public:
 		~Boulder();
+=======
+public:
+	~Boulder();
+>>>>>>> Stashed changes
 };
 
 
 class Ice : public Solid {
+<<<<<<< Updated upstream
 	public:
 		~Ice();
+=======
+public:
+	Ice(int startX, int startY, StudentWorld* sw) : Actor(IID_ICE, startX, startY, sw, right, 0.25, 3)
+	{
+		setVisible(true);
+	}
+	~Ice();
+>>>>>>> Stashed changes
 };
 
 
 class RegularProtester : public Protester {
+<<<<<<< Updated upstream
 	public:
 		~RegularProtester();
+=======
+public:
+	~RegularProtester();
+>>>>>>> Stashed changes
 };
 
 
 class HardcoreProtester : public Protester {
+<<<<<<< Updated upstream
 	public:
 		~HardcoreProtester();
+=======
+public:
+	~HardcoreProtester();
+>>>>>>> Stashed changes
 };
 
 

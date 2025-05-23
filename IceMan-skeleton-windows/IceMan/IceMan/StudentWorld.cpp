@@ -73,3 +73,7 @@ void StudentWorld::showTextBar() {
 
 	setGameStatText(text);
 }
+
+StudentWorld* StudentWorld::getWorld() {
+	return this;
+}

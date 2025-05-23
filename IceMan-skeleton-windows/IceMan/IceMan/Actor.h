@@ -8,7 +8,7 @@ class StudentWorld;
 
 //read carey nachenberg lecture 6 and 7 sldies for polymorphism and inhertiance
 
-class Actor : public GraphObject{
+class Actor : public GraphObject {
 
 private:
 	StudentWorld* studentWorld;
@@ -35,7 +35,7 @@ public:
 	void setHealth(int health);
 	int getHealth();
 
-		
+
 };
 
 class IceMan : public Human {
@@ -90,7 +90,7 @@ public:
 class Ice : public Actor {
 private:
 public:
-	
+
 	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
 
 	void doAction();

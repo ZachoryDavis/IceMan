@@ -25,6 +25,10 @@ public:
 
 	void showTextBar();
 
+	StudentWorld* getWorld();
+
+	Actor* getIceField();
+
 private:
 	Actor* iceField[VIEW_WIDTH][VIEW_HEIGHT];
 	std::vector<Actor*> actionList;

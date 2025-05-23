@@ -19,7 +19,7 @@ inline int roundAwayFromZero(double r)
 
 class GraphObject
 {
-  public:
+  public:	
 
 	enum Direction { none, up, down, left, right };
 

@@ -1,8 +1,9 @@
+
 #include "Actor.h"
 #include "StudentWorld.h"
 
 
-Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) 
+Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld)
 	: GraphObject(imageID, startX, startY, startingDirection, size, depth) {
 
 	this->studentWorld = studentWorld;
@@ -24,7 +25,7 @@ StudentWorld* Actor::getWorld() {
 Human::Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health)
 	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld) {
 
-	
+
 }
 
 Human::~Human() {
@@ -78,8 +79,8 @@ int IceMan::getNumberOfGold() {
 
 void IceMan::doAction() {
 	int keyPress;
-	
-	
+
+
 	if (getWorld()->getKey(keyPress)) {
 		switch (keyPress)
 		{
@@ -87,25 +88,42 @@ void IceMan::doAction() {
 			if (getDirection() != left) {
 				this->setDirection(left);
 			}
+			
+			
+			if (getX() >= 1) {
+				moveTo(getX() - 1, getY());
+			}
 			break;
-
-			//if(getX() >= 1 && )
+			
 		case KEY_PRESS_RIGHT:
 			if (getDirection() != right) {
 				this->setDirection(right);
 			}
+
+			if (getX() <= 59) {
+				moveTo(getX() + 1, getY());
+			}
+
 			break;
 
 		case KEY_PRESS_UP:
 			if (getDirection() != up) {
 				this->setDirection(up);
 			}
+
+			if (getY() <= 59) {
+				moveTo(getX(), getY() + 1);
+			}
 			break;
 
 		case KEY_PRESS_DOWN:
 			if (getDirection() != down) {
 				this->setDirection(down);
-			};
+			}
+
+			if (getY() >= 1) {
+				moveTo(getX(), getY() - 1);
+			}
 			break;
 
 		default:
@@ -116,7 +134,7 @@ void IceMan::doAction() {
 //====================================================================================================================================
 
 
-Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_ICE, startX, startY, right, 0.25, 3 , studentWorld) { 
+Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_ICE, startX, startY, right, 0.25, 3, studentWorld) {
 	setVisible(true);
 }
 
@@ -126,7 +144,7 @@ void Ice::doAction() {
 
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_BOULDER, startX, startY, down, 1, 1, studentWorld) {
 	this->isStable = true;
-	setVisible(true);	
+	setVisible(true);
 }
 
 void Boulder::doAction() {

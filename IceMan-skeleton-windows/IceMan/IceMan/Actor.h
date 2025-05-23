@@ -27,7 +27,10 @@ private:
 public:
 	Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
 	virtual ~Human();
+
 	void setHealth(int health);
+	int getHealth();
+
 		
 };
 
@@ -40,6 +43,15 @@ private:
 public:
 	IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
 	virtual ~IceMan();
+
+	void setNumberOfSquirts(int squirts);
+	int getNumberOfSquirts();
+
+	void setNumberOfSonar(int sonars);
+	int getNumberOfSonar();
+
+	void setNumberOfGold(int gold);
+	int getNumberOfGold();
 
 };
 
@@ -87,12 +99,15 @@ public:
 class Ice : public Actor {
 private:
 public:
+	
 	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
 };
 
-class Boulder : public Solid {
+class Boulder : public Actor {
 private:
+	bool isStable{};
 public:
+	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
 };
 
 //================================================

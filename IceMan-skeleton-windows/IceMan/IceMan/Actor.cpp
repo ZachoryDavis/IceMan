@@ -27,6 +27,11 @@ void Human::setHealth(int health) {
 	this->health = health;
 }
 
+int Human::getHealth() {
+	return this->health;
+}
+
+//====================================================================================================================================
 IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health)
 	: Human(imageID, startX, startY, startingDirection, size, depth, studentWorld, health) {
 	setHealth(10);
@@ -40,7 +45,36 @@ IceMan::~IceMan() {
 	//TODO: IMPLEMENT
 }
 
+void IceMan::setNumberOfSquirts(int squirts) {
+	this->numberOfSquirts = squirts;
+}
+
+int IceMan::getNumberOfSquirts() {
+	return this->numberOfSquirts;
+}
+
+void IceMan::setNumberOfSonar(int sonar) {
+	this->numberOfSonarKits = sonar;
+}
+
+int IceMan::getNumberOfSonar() {
+	return this->numberOfSonarKits;
+}
+
+void IceMan::setNumberOfGold(int gold) {
+	this->numberOfGoldNuggets = gold;
+}
+int IceMan::getNumberOfGold() {
+	return this->numberOfGoldNuggets;
+}
+//====================================================================================================================================
+
 
 Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_ICE, startX, startY, right, 0.25, 3 , studentWorld) { 
 	setVisible(true);
+}
+
+Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_BOULDER, startX, startY, down, 1, 1, studentWorld) {
+	this->isStable = true;
+	setVisible(true);	
 }

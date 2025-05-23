@@ -7,6 +7,7 @@ GameWorld* createStudentWorld(string assetDir)
 	return new StudentWorld(assetDir);
 }
 
+
 int StudentWorld::init() {
 
 	this->iceman = new IceMan(IID_PLAYER, 30, 60, GraphObject::right, 1, 0, this, 10);
@@ -22,9 +23,12 @@ int StudentWorld::init() {
 		}
 	}
 
-	numberOfBoulder = min(currentLevelNumber / 2 + 2, 9);
+	numberOfBoulder = min<unsigned int>(getLevel() / 2 + 2, 9);
 	for (int i = 0; i < numberOfBoulder; i++) {
+		int randomX = rand() % 64,
+			randomY = rand() % 60;
 
+		iceField[randomX][randomY] = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this);
 	}
 
 	return GWSTATUS_CONTINUE_GAME;

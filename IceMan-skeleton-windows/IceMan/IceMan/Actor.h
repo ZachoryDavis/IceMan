@@ -80,22 +80,6 @@ public:
 
 //============= SOLID CLASSES ====================
 
-class Solid : public Actor {
-private:
-
-public:
-	Solid(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
-	virtual ~Solid();
-
-};
-
-//class Ice : public Solid {
-//private:
-//public:
-//
-//	
-//};
-
 class Ice : public Actor {
 private:
 public:

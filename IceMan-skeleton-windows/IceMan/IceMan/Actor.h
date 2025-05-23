@@ -16,6 +16,10 @@ private:
 public:
 	Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
 	virtual ~Actor();
+	virtual void doAction() = 0;
+	bool isAlive();
+
+	StudentWorld* getWorld();
 };
 
 
@@ -53,6 +57,9 @@ public:
 	void setNumberOfGold(int gold);
 	int getNumberOfGold();
 
+	void doAction();
+
+
 };
 
 class Protestor : public Human {
@@ -85,6 +92,8 @@ private:
 public:
 	
 	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+
+	void doAction();
 };
 
 class Boulder : public Actor {
@@ -92,6 +101,7 @@ private:
 	bool isStable{};
 public:
 	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+	void doAction();
 };
 
 //================================================
@@ -133,4 +143,4 @@ public:
 //=================================================
 
 
-#endif ACTOR_H_
+#endif //ACTOR_H_

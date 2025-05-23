@@ -40,6 +40,9 @@ int StudentWorld::move() {
 
 	showTextBar();
 
+	if (iceman->isAlive()) {
+		iceman->doAction();
+	}
 	//decLives();
 	//return GWSTATUS_PLAYER_DIED;
 	return 9;

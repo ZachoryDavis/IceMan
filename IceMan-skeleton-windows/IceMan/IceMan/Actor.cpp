@@ -13,6 +13,14 @@ Actor::~Actor() {
 	//TODO: IMPLEMENT
 }
 
+bool Actor::isAlive() {
+	return alive;
+}
+
+StudentWorld* Actor::getWorld() {
+	return this->studentWorld;
+}
+
 Human::Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health)
 	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld) {
 
@@ -67,6 +75,44 @@ void IceMan::setNumberOfGold(int gold) {
 int IceMan::getNumberOfGold() {
 	return this->numberOfGoldNuggets;
 }
+
+void IceMan::doAction() {
+	int keyPress;
+	
+	
+	if (getWorld()->getKey(keyPress)) {
+		switch (keyPress)
+		{
+		case KEY_PRESS_LEFT:
+			if (getDirection() != left) {
+				this->setDirection(left);
+			}
+			break;
+
+			//if(getX() >= 1 && )
+		case KEY_PRESS_RIGHT:
+			if (getDirection() != right) {
+				this->setDirection(right);
+			}
+			break;
+
+		case KEY_PRESS_UP:
+			if (getDirection() != up) {
+				this->setDirection(up);
+			}
+			break;
+
+		case KEY_PRESS_DOWN:
+			if (getDirection() != down) {
+				this->setDirection(down);
+			};
+			break;
+
+		default:
+			break;
+		}
+	}
+}
 //====================================================================================================================================
 
 
@@ -74,7 +120,15 @@ Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, doubl
 	setVisible(true);
 }
 
+void Ice::doAction() {
+
+}
+
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_BOULDER, startX, startY, down, 1, 1, studentWorld) {
 	this->isStable = true;
 	setVisible(true);	
+}
+
+void Boulder::doAction() {
+
 }

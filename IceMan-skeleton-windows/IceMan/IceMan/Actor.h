@@ -6,7 +6,7 @@
 class StudentWorld;
 
 
-
+//read carey nachenberg lecture 6 and 7 sldies for polymorphism and inhertiance
 
 class Actor : public GraphObject{
 
@@ -27,14 +27,15 @@ private:
 public:
 	Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
 	virtual ~Human();
+	void setHealth(int health);
 		
 };
 
 class IceMan : public Human {
 private:
-	int numberOfSquirts = 5;
-	int numberOfSonarKits = 1;
-	int numberOfGoldNuggets = 0;
+	int numberOfSquirts{};
+	int numberOfSonarKits{};
+	int numberOfGoldNuggets{};
 	//int iceManHealth;
 public:
 	IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
@@ -42,7 +43,12 @@ public:
 
 };
 
-class RegularProtestor : public Human {
+class Protestor : public Human {
+private:
+public:
+};
+
+class RegularProtestor : public Protestor {
 private:
 public:
 	//TODO: IMPLEMENT CONSTRUCTOR AND CLASS VARS
@@ -50,8 +56,7 @@ public:
 	virtual ~RegularProtestor();
 };
 
-//Inherit from RegularProtestor or Human ????
-class HardcoreProtestor : public RegularProtestor {
+class HardcoreProtestor : public Protestor {
 private:
 public:
 	//TODO: IMPLEMENT
@@ -67,13 +72,22 @@ class Solid : public Actor {
 private:
 
 public:
+	Solid(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+	virtual ~Solid();
 
 };
 
-class Ice : public Solid {
+//class Ice : public Solid {
+//private:
+//public:
+//
+//	
+//};
+
+class Ice : public Actor {
 private:
 public:
-	
+	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
 };
 
 class Boulder : public Solid {
@@ -120,4 +134,4 @@ public:
 //=================================================
 
 
-#endif // ACTOR_H_
+#endif ACTOR_H_

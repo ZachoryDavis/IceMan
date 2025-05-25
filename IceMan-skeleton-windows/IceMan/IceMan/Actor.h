@@ -2,6 +2,7 @@
 #define ACTOR_H_
 
 #include "GraphObject.h"
+#include <string>
 
 class StudentWorld;
 
@@ -13,11 +14,14 @@ class Actor : public GraphObject {
 private:
 	StudentWorld* studentWorld;
 	bool alive;
+	std::string type = "";
 public:
-	Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+	Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	virtual ~Actor();
 	virtual void doAction() = 0;
 	bool isAlive();
+
+	std::string getType();
 
 	StudentWorld* getWorld();
 };
@@ -29,7 +33,7 @@ class Human : public Actor {
 private:
 	int health{};
 public:
-	Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
+	Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	virtual ~Human();
 
 	void setHealth(int health);
@@ -45,7 +49,7 @@ private:
 	int numberOfGoldNuggets{};
 	//int iceManHealth;
 public:
-	IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health);
+	IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	virtual ~IceMan();
 
 	void setNumberOfSquirts(int squirts);
@@ -65,19 +69,23 @@ public:
 class Protestor : public Human {
 private:
 public:
+	Protestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
+
 };
 
 class RegularProtestor : public Protestor {
 private:
 public:
 	//TODO: IMPLEMENT CONSTRUCTOR AND CLASS VARS
-	RegularProtestor();
+	RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	virtual ~RegularProtestor();
 };
 
 class HardcoreProtestor : public Protestor {
 private:
 public:
+	HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
+
 	//TODO: IMPLEMENT
 };
 
@@ -91,16 +99,18 @@ class Ice : public Actor {
 private:
 public:
 
-	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 
 	void doAction();
 };
+
+
 
 class Boulder : public Actor {
 private:
 	bool isStable{};
 public:
-	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld);
+	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	void doAction();
 };
 
@@ -111,27 +121,36 @@ public:
 class Goodie : public Actor {
 private:
 public:
+	Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 
 };
 
 class Water : public Goodie {
 private:
 public:
+	Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+
 };
 
 class Sonar : public Goodie {
 private:
 public:
+	Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+
 };
 
 class Gold : public Goodie {
 private:
 public:
+	Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+
 };
 
 class OilBarrel : public Goodie {
 private:
 public:
+	OilBarrel(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+
 };
 
 

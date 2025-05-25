@@ -3,9 +3,8 @@
 #include "StudentWorld.h"
 
 
-Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld)
-	: GraphObject(imageID, startX, startY, startingDirection, size, depth) {
-
+Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+	: GraphObject(imageID, startX, startY, startingDirection, size, depth), type(type) {
 	this->studentWorld = studentWorld;
 	this->alive = true;
 }
@@ -22,10 +21,16 @@ StudentWorld* Actor::getWorld() {
 	return this->studentWorld;
 }
 
-Human::Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health)
-	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld) {
+std::string Actor::getType() {
+	if (this->type != "")
+		return this->type;
+	else
+		return ""; //default variable for when the cell is empty, the program doesnt try to return a null value
+}
 
-
+Human::Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    this->health = health;
 }
 
 Human::~Human() {
@@ -41,8 +46,8 @@ int Human::getHealth() {
 }
 
 //====================================================================================================================================
-IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health)
-	: Human(imageID, startX, startY, startingDirection, size, depth, studentWorld, health) {
+IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+	: Human(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type) {
 	setHealth(10);
 	this->numberOfSquirts = 5;
 	this->numberOfSonarKits = 1;
@@ -79,18 +84,16 @@ int IceMan::getNumberOfGold() {
 
 void IceMan::doAction() {
 	int keyPress;
+	StudentWorld* thisWorld = getWorld();
 
-
-	if (getWorld()->getKey(keyPress)) {
+	if (thisWorld->getKey(keyPress)) {
 		switch (keyPress)
 		{
 		case KEY_PRESS_LEFT:
 			if (getDirection() != left) {
 				this->setDirection(left);
 			}
-			
-			
-			if (getX() >= 1) {
+			if (getX() >= 1 && !thisWorld->isBoulder(getX() - 1, getY())) {
 				moveTo(getX() - 1, getY());
 			}
 			break;
@@ -100,7 +103,7 @@ void IceMan::doAction() {
 				this->setDirection(right);
 			}
 
-			if (getX() <= 59) {
+			if (getX() <= 59 && !thisWorld->isBoulder(getX() + 1, getY())) {
 				moveTo(getX() + 1, getY());
 			}
 
@@ -111,7 +114,7 @@ void IceMan::doAction() {
 				this->setDirection(up);
 			}
 
-			if (getY() <= 59) {
+			if (getY() <= 59 && !thisWorld->isBoulder(getX(), getY() + 1)) {
 				moveTo(getX(), getY() + 1);
 			}
 			break;
@@ -121,7 +124,7 @@ void IceMan::doAction() {
 				this->setDirection(down);
 			}
 
-			if (getY() >= 1) {
+			if (getY() >= 1 && !thisWorld->isBoulder(getX(), getY() - 1)) {
 				moveTo(getX(), getY() - 1);
 			}
 			break;
@@ -134,7 +137,8 @@ void IceMan::doAction() {
 //====================================================================================================================================
 
 
-Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_ICE, startX, startY, right, 0.25, 3, studentWorld) {
+Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
 	setVisible(true);
 }
 
@@ -142,7 +146,8 @@ void Ice::doAction() {
 
 }
 
-Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld) : Actor(IID_BOULDER, startX, startY, down, 1, 1, studentWorld) {
+Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
 	this->isStable = true;
 	setVisible(true);
 }

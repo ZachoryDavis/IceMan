@@ -10,15 +10,15 @@ GameWorld* createStudentWorld(string assetDir)
 
 int StudentWorld::init() {
 
-	this->iceman = new IceMan(IID_PLAYER, 30, 60, GraphObject::right, 1, 0, this, 10);
+	this->iceman = new IceMan(IID_PLAYER, 30, 60, GraphObject::right, 1, 0, this, 10, "player");
 
 	for (int i = 0; i < 64; i++) {
 		for (int j = 0; j < 60; j++) {
 			if (i >= 30 && i <= 33 && j > 3) {
-
+				this->iceField[i][j] = nullptr;
 			}
 			else {
-				this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this);
+				this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
 			}
 		}
 	}
@@ -28,7 +28,7 @@ int StudentWorld::init() {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
 
-		iceField[randomX][randomY] = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this);
+		iceField[randomX][randomY] = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
 	}
 
 	return GWSTATUS_CONTINUE_GAME;
@@ -76,4 +76,13 @@ void StudentWorld::showTextBar() {
 
 StudentWorld* StudentWorld::getWorld() {
 	return this;
+}
+
+bool StudentWorld::isBoulder(int x, int y) {
+	if (iceField[x][y] != nullptr && iceField[x][y]->getType() == "boulder") {
+		return true;
+	}
+	else {
+		return false;
+	}
 }

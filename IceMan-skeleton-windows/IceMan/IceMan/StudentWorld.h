@@ -3,6 +3,7 @@
 
 #include "GameWorld.h"
 #include "GameConstants.h"
+#include "GraphObject.h"
 #include "Actor.h"	
 #include <string>
 #include <vector>
@@ -29,8 +30,10 @@ public:
 
 	Actor* getIceField();
 
+	bool isBoulder(int x, int y);
+
 private:
-	Actor* iceField[VIEW_WIDTH][VIEW_HEIGHT];
+	Actor* iceField[64][60];
 	std::vector<Actor*> actionList;
 	IceMan* iceman;
 

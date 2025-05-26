@@ -83,10 +83,23 @@ int IceMan::getNumberOfGold() {
 }
 
 //Added boundry checking for boulders
+//Added checking for Ice to remove it if iceman moves over it
 void IceMan::doAction() {
     int keyPress;
     StudentWorld* thisWorld = getWorld();
     const int iceManSize = 4;
+
+    ///////////////////////////////////////////////////////////////
+    int x = getX();
+    int y = getY();
+    for (int new_x = 0; new_x < 4; new_x++) {
+        for (int new_y = 0; new_y < 4; new_y++) {
+            if (x + new_x < 64 && y + new_y < 60) {
+                thisWorld->removeIce(x + new_x, y + new_y);
+            }
+        }
+    }
+    ///////////////////////////////////////////////////////////////
 
     if (thisWorld->getKey(keyPress)) {
         switch (keyPress)

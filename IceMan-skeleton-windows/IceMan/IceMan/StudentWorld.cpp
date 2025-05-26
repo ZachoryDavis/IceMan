@@ -120,3 +120,11 @@ bool StudentWorld::isBoulder(int x, int y) {
 }
 //Also I made boulders as pointers and put the pointers into IceField as well as
 //Pushed them into actionList, so that I can access them easily
+
+
+void StudentWorld::removeIce(int x, int y) {
+	if (iceField[x][y] != nullptr && iceField[x][y]->getType() == "ice") {
+		delete iceField[x][y];
+		iceField[x][y] = nullptr;
+	}
+}

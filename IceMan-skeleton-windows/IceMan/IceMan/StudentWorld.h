@@ -32,6 +32,8 @@ public:
 
 	bool isBoulder(int x, int y);
 
+	void removeIce(int x, int y);
+
 private:
 	Actor* iceField[64][60];
 	std::vector<Actor*> actionList;

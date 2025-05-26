@@ -18,7 +18,8 @@ int StudentWorld::init() {
 				this->iceField[i][j] = nullptr;
 			}
 			else {
-				this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
+				//if (iceField[i][j]->getType() == "boulder")
+					this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
 			}
 		}
 	}
@@ -28,7 +29,9 @@ int StudentWorld::init() {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
 
-		iceField[randomX][randomY] = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+		iceField[randomX][randomY] = boulder;
+		actionList.push_back(boulder);
 	}
 
 	return GWSTATUS_CONTINUE_GAME;
@@ -78,11 +81,19 @@ StudentWorld* StudentWorld::getWorld() {
 	return this;
 }
 
+
+// the boulder was defined by its bottom left corner, so I had it check
+// the 4x4 area from that corner and define all of it as a boulder
 bool StudentWorld::isBoulder(int x, int y) {
-	if (iceField[x][y] != nullptr && iceField[x][y]->getType() == "boulder") {
-		return true;
+	for (Actor* actor : actionList) {
+		if (actor != nullptr && actor->getType() == "boulder") {
+			int boulder_x = actor -> getX();
+			int boulder_y = actor -> getY();
+			if (x >= boulder_x && x <= boulder_x + 3 && y >= boulder_y && y <= boulder_y + 3) {
+				return true;
+			}
+		}
 	}
-	else {
-		return false;
-	}
+	return false;
 }
+

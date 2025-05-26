@@ -82,57 +82,91 @@ int IceMan::getNumberOfGold() {
 	return this->numberOfGoldNuggets;
 }
 
+//Added boundry checking for boulders
 void IceMan::doAction() {
-	int keyPress;
-	StudentWorld* thisWorld = getWorld();
+    int keyPress;
+    StudentWorld* thisWorld = getWorld();
+    const int iceManSize = 4;
 
-	if (thisWorld->getKey(keyPress)) {
-		switch (keyPress)
-		{
-		case KEY_PRESS_LEFT:
-			if (getDirection() != left) {
-				this->setDirection(left);
-			}
-			if (getX() >= 1 && !thisWorld->isBoulder(getX() - 1, getY())) {
-				moveTo(getX() - 1, getY());
-			}
-			break;
-			
-		case KEY_PRESS_RIGHT:
-			if (getDirection() != right) {
-				this->setDirection(right);
-			}
+    if (thisWorld->getKey(keyPress)) {
+        switch (keyPress)
+        {
+        case KEY_PRESS_LEFT:
+            if (getDirection() != left) {
+                this->setDirection(left);
+            }
+            if (getX() >= 1) {
+                bool blocked = false;
+                for (int new_y = 0; new_y < iceManSize; ++new_y) {
+                    if (thisWorld->isBoulder(getX() - 1, getY() + new_y)) {
+                        blocked = true;
+                        break;
+                    }
+                }
+                if (!blocked) {
+                    moveTo(getX() - 1, getY());
+                }
+            }
+            break;
 
-			if (getX() <= 59 && !thisWorld->isBoulder(getX() + 1, getY())) {
-				moveTo(getX() + 1, getY());
-			}
+        case KEY_PRESS_RIGHT:
+            if (getDirection() != right) {
+                this->setDirection(right);
+            }
+            if (getX() + iceManSize <= 63) {
+                bool blocked = false;
+                for (int new_y = 0; new_y < iceManSize; ++new_y) {
+                    if (thisWorld->isBoulder(getX() + iceManSize, getY() + new_y)) {
+                        blocked = true;
+                        break;
+                    }
+                }
+                if (!blocked) {
+                    moveTo(getX() + 1, getY());
+                }
+            }
+            break;
 
-			break;
+        case KEY_PRESS_UP:
+            if (getDirection() != up) {
+                this->setDirection(up);
+            }
+            if (getY() + iceManSize <= 59) {
+                bool blocked = false;
+                for (int new_x = 0; new_x < iceManSize; ++new_x) {
+                    if (thisWorld->isBoulder(getX() + new_x, getY() + iceManSize)) {
+                        blocked = true;
+                        break;
+                    }
+                }
+                if (!blocked) {
+                    moveTo(getX(), getY() + 1);
+                }
+            }
+            break;
 
-		case KEY_PRESS_UP:
-			if (getDirection() != up) {
-				this->setDirection(up);
-			}
+        case KEY_PRESS_DOWN:
+            if (getDirection() != down) {
+                this->setDirection(down);
+            }
+            if (getY() >= 1) {
+                bool blocked = false;
+                for (int new_x = 0; new_x < iceManSize; ++new_x) {
+                    if (thisWorld->isBoulder(getX() + new_x, getY() - 1)) {
+                        blocked = true;
+                        break;
+                    }
+                }
+                if (!blocked) {
+                    moveTo(getX(), getY() - 1);
+                }
+            }
+            break;
 
-			if (getY() <= 59 && !thisWorld->isBoulder(getX(), getY() + 1)) {
-				moveTo(getX(), getY() + 1);
-			}
-			break;
-
-		case KEY_PRESS_DOWN:
-			if (getDirection() != down) {
-				this->setDirection(down);
-			}
-
-			if (getY() >= 1 && !thisWorld->isBoulder(getX(), getY() - 1)) {
-				moveTo(getX(), getY() - 1);
-			}
-			break;
-
-		default:
-			break;
-		}
-	}
+        default:
+            break;
+        }
+    }
 }
 //====================================================================================================================================
 
@@ -155,3 +189,5 @@ Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirectio
 void Boulder::doAction() {
 
 }
+
+

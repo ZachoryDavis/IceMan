@@ -8,30 +8,52 @@ GameWorld* createStudentWorld(string assetDir)
 }
 
 
+//Made the boulders first and stored their cordinates as pairs in a vector so I can check for
+//boulders later on when I am making the ice field
 int StudentWorld::init() {
 
 	this->iceman = new IceMan(IID_PLAYER, 30, 60, GraphObject::right, 1, 0, this, 10, "player");
 
-	for (int i = 0; i < 64; i++) {
-		for (int j = 0; j < 60; j++) {
-			if (i >= 30 && i <= 33 && j > 3) {
-				this->iceField[i][j] = nullptr;
-			}
-			else {
-				//if (iceField[i][j]->getType() == "boulder")
-					this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
-			}
-		}
-	}
-
+	std::vector<std::pair<int, int>> boulderPosition;
 	numberOfBoulder = min<unsigned int>(getLevel() / 2 + 2, 9);
+
 	for (int i = 0; i < numberOfBoulder; i++) {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
+		boulderPosition.push_back({ randomX, randomY });
 
 		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
 		iceField[randomX][randomY] = boulder;
 		actionList.push_back(boulder);
+	}
+
+
+
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 60; j++) {
+
+			bool boulderHere = false;
+			for (pair<int, int>& pos : boulderPosition) {
+
+				int boulder_x = pos.first;
+				int boulder_y = pos.second;
+
+				if (i >= boulder_x && i <= boulder_x + 3 && j >= boulder_y && j <= boulder_y + 3) {
+					boulderHere = true;
+					break;
+				}
+
+			}
+
+			if (i >= 30 && i <= 33 && j > 3) {
+				this->iceField[i][j] = nullptr;
+			}
+
+			else if (!boulderHere) {
+					this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
+			}
+
+		}
 	}
 
 	return GWSTATUS_CONTINUE_GAME;
@@ -96,4 +118,5 @@ bool StudentWorld::isBoulder(int x, int y) {
 	}
 	return false;
 }
-
+//Also I made boulders as pointers and put the pointers into IceField as well as
+//Pushed them into actionList, so that I can access them easily

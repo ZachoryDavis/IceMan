@@ -1,5 +1,6 @@
 #include "StudentWorld.h"
 #include <string>
+#include <algorithm>
 using namespace std;
 
 GameWorld* createStudentWorld(string assetDir)
@@ -16,18 +17,37 @@ int StudentWorld::init() {
 
 	std::vector<std::pair<int, int>> boulderPosition;
 	numberOfBoulder = min<unsigned int>(getLevel() / 2 + 2, 9);
+	numberOfGold = max<unsigned int>(5 - getLevel() / 2, 2);
+	numberOfOil = min<unsigned int>(2 + getLevel(), 21);
 
 	for (int i = 0; i < numberOfBoulder; i++) {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
-		boulderPosition.push_back({ randomX, randomY });
+		if (!overlap({ randomX, randomY })) {
+			boulderPosition.push_back({ randomX, randomY });
 
-		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
-		iceField[randomX][randomY] = boulder;
-		actionList.push_back(boulder);
+			Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+			iceField[randomX][randomY] = boulder;
+			actionList.push_back(boulder);
+		}
+		else {
+			i--;
+		}
 	}
 
+	for (int i = 0; i < numberOfOil; i++) {
+		int randomX = rand() % 64,
+			randomY = rand() % 60;
+		if (!overlap({ randomX, randomY })) {
+			OilBarrel* oil = new OilBarrel(IID_BARREL, randomX, randomY, GraphObject::right, 1, 2, this, "oil");
 
+			iceField[randomX][randomY] = oil;
+			actionList.push_back(oil);
+		}
+		else {
+			i--;
+		}
+	}
 
 	for (int i = 0; i < 64; i++) {
 		for (int j = 0; j < 60; j++) {
@@ -68,6 +88,13 @@ int StudentWorld::move() {
 	if (iceman->isAlive()) {
 		iceman->doAction();
 	}
+
+	for (int i = 0; i < actionList.size(); i++) {
+		if (actionList[i]->isAlive()) {
+			actionList[i]->doAction();
+		}
+	}
+
 	//decLives();
 	//return GWSTATUS_PLAYER_DIED;
 	return 9;
@@ -78,12 +105,14 @@ void StudentWorld::cleanUp() {
 }
 
 void StudentWorld::showTextBar() {
+	IceMan* iceman = getIceMan();
+
 	int level = getLevel(),
 		lives = getLives(),
 		health = iceman->getHealth(),
 		squirts = iceman->getNumberOfSquirts(),
 		gold = iceman->getNumberOfGold(),
-		oilLeftOnField = numberOfOil - 1, //fix this
+		oilLeftOnField = numberOfOil - iceman->getNumberOfOil(), //fix this
 		sonar = iceman->getNumberOfSonar(),
 		score = 000000; //fix this
 
@@ -126,5 +155,27 @@ void StudentWorld::removeIce(int x, int y) {
 	if (iceField[x][y] != nullptr && iceField[x][y]->getType() == "ice") {
 		delete iceField[x][y];
 		iceField[x][y] = nullptr;
+		playSound(SOUND_DIG);
 	}
+}
+
+bool StudentWorld::overlap(std::pair<int, int> coords) {
+	for (int i = 0; i < actionList.size(); i++) {
+		if (coords.first == actionList[i]->getX() && coords.second == actionList[i]->getY()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<Actor*> StudentWorld::getList() {
+	return this->actionList;
+}
+
+IceMan* StudentWorld::getIceMan() {
+	return this->iceman;
+}
+
+void StudentWorld::decreaseOil() {
+	this->numberOfOil--;
 }

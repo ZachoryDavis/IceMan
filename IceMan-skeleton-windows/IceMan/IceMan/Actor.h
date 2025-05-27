@@ -21,6 +21,10 @@ public:
 	virtual void doAction() = 0;
 	bool isAlive();
 
+
+	//temp i think delete eventually when implement destructor
+	void setAlive(bool aliveStatus);
+
 	std::string getType();
 
 	StudentWorld* getWorld();
@@ -47,6 +51,7 @@ private:
 	int numberOfSquirts{};
 	int numberOfSonarKits{};
 	int numberOfGoldNuggets{};
+	int numberOfOil{};
 	//int iceManHealth;
 public:
 	IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
@@ -60,6 +65,9 @@ public:
 
 	void setNumberOfGold(int gold);
 	int getNumberOfGold();
+
+	void increaseOil();
+	int getNumberOfOil();
 
 	void doAction();
 
@@ -122,6 +130,8 @@ class Goodie : public Actor {
 private:
 public:
 	Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+	virtual ~Goodie();
+	void doAction();
 
 };
 
@@ -150,6 +160,9 @@ class OilBarrel : public Goodie {
 private:
 public:
 	OilBarrel(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+	virtual ~OilBarrel();
+
+	void doAction();
 
 };
 

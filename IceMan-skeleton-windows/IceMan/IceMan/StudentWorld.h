@@ -32,7 +32,17 @@ public:
 
 	bool isBoulder(int x, int y);
 
+	bool overlap(std::pair<int, int>  coords);
+
 	void removeIce(int x, int y);
+
+	std::vector<Actor*> getList();
+
+	IceMan* getIceMan();
+
+	void decreaseOil();
+
+	
 
 private:
 	Actor* iceField[64][60];
@@ -44,7 +54,7 @@ private:
 		numberOfBoulder,
 		numberOfOil,
 		numberOfProtestor,
-		currentLevelNumber;
+		currentLevelNumber = 0;
 
 	
 };

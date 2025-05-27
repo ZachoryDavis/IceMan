@@ -28,6 +28,10 @@ std::string Actor::getType() {
 		return ""; //default variable for when the cell is empty, the program doesnt try to return a null value
 }
 
+void Actor::setAlive(bool aliveStatus) {
+    this->alive = aliveStatus;
+}
+
 Human::Human(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
     : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
     this->health = health;
@@ -78,16 +82,25 @@ int IceMan::getNumberOfSonar() {
 void IceMan::setNumberOfGold(int gold) {
 	this->numberOfGoldNuggets = gold;
 }
+
 int IceMan::getNumberOfGold() {
 	return this->numberOfGoldNuggets;
 }
 
+void IceMan::increaseOil() {
+    this->numberOfOil++;
+}
+
+int IceMan::getNumberOfOil() {
+    return numberOfOil;
+}
 //Added boundry checking for boulders
 //Added checking for Ice to remove it if iceman moves over it
 void IceMan::doAction() {
     int keyPress;
     StudentWorld* thisWorld = getWorld();
     const int iceManSize = 4;
+    std::vector<Actor*> actionList = thisWorld->getList();
 
     ///////////////////////////////////////////////////////////////
     int x = getX();
@@ -99,8 +112,11 @@ void IceMan::doAction() {
             }
         }
     }
+   
     ///////////////////////////////////////////////////////////////
 
+  
+    ///////////////////////////////////////////////////
     if (thisWorld->getKey(keyPress)) {
         switch (keyPress)
         {
@@ -203,4 +219,56 @@ void Boulder::doAction() {
 
 }
 
+Goodie::Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type) 
+    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type){
 
+}
+
+void Goodie::doAction() {
+    
+}
+
+
+OilBarrel::OilBarrel(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    setVisible(false);
+}
+
+void OilBarrel::doAction() {
+    if (!isAlive()) {
+        return;
+    }
+    else {
+        StudentWorld* thisWorld = getWorld();
+        IceMan* iceman = thisWorld->getIceMan();
+
+        int iceManX = iceman->getX(),
+            iceManY = iceman->getY(),
+            thisX = getX(),
+            thisY = getY();
+
+        if (std::abs(iceManX - thisX) <= 10 && std::abs(iceManY - thisY) <= 10) {
+            this->setVisible(true);
+        }
+        //test this
+        if (std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
+            setVisible(false);         
+            setAlive(false);        
+            iceman->increaseOil();
+            thisWorld->playSound(SOUND_FOUND_OIL); 
+            thisWorld->increaseScore(1000);        
+            thisWorld->decreaseOil();
+            return;
+        }
+    }
+
+    
+}
+
+Goodie::~Goodie() {
+
+}
+
+OilBarrel::~OilBarrel() {
+
+}

@@ -247,17 +247,17 @@ void OilBarrel::doAction() {
             thisX = getX(),
             thisY = getY();
 
-        if (std::abs(iceManX - thisX) <= 10 && std::abs(iceManY - thisY) <= 10) {
+        if (std::abs(iceManX - thisX) <= 4 && std::abs(iceManY - thisY) <= 4) {
             this->setVisible(true);
         }
         //test this
         if (std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
             setVisible(false);         
-            setAlive(false);        
+            setAlive(false);   
+            thisWorld->decreaseOil();
             iceman->increaseOil();
             thisWorld->playSound(SOUND_FOUND_OIL); 
             thisWorld->increaseScore(1000);        
-            thisWorld->decreaseOil();
             return;
         }
     }

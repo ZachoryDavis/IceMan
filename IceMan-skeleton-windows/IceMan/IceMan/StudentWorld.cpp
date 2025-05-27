@@ -112,9 +112,9 @@ void StudentWorld::showTextBar() {
 		health = iceman->getHealth(),
 		squirts = iceman->getNumberOfSquirts(),
 		gold = iceman->getNumberOfGold(),
-		oilLeftOnField = numberOfOil - iceman->getNumberOfOil(), //fix this
+		oilLeftOnField = numberOfOil,
 		sonar = iceman->getNumberOfSonar(),
-		score = 000000; //fix this
+		score = getScore(); //fix this
 
 	string text = "Level: " + std::to_string(level) +
 		" Lives: " + std::to_string(lives) +

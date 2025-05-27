@@ -42,6 +42,9 @@ public:
 
 	void decreaseOil();
 
+	int getOil() {
+		return this->numberOfOil;
+	}
 	
 
 private:

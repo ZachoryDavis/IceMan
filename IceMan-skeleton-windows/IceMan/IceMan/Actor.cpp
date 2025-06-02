@@ -94,6 +94,10 @@ void IceMan::increaseOil() {
 int IceMan::getNumberOfOil() {
     return numberOfOil;
 }
+
+void IceMan::increaseGold() {
+    this->numberOfGoldNuggets++;
+}
 //Added boundry checking for boulders
 //Added checking for Ice to remove it if iceman moves over it
 void IceMan::doAction() {
@@ -209,6 +213,12 @@ void Ice::doAction() {
 
 }
 
+Ice::~Ice() {
+   /* if (this->isAlive()) {
+        delete this;
+    }*/
+}
+
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
 	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
 	this->isStable = true;
@@ -224,6 +234,10 @@ Goodie::Goodie(int imageID, int startX, int startY, Direction startingDirection,
 
 }
 
+Goodie::~Goodie() {
+
+}
+
 void Goodie::doAction() {
     
 }
@@ -232,6 +246,10 @@ void Goodie::doAction() {
 OilBarrel::OilBarrel(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
     setVisible(false);
+}
+
+OilBarrel::~OilBarrel() {
+
 }
 
 void OilBarrel::doAction() {
@@ -261,14 +279,50 @@ void OilBarrel::doAction() {
             return;
         }
     }
-
     
 }
 
-Goodie::~Goodie() {
+Gold::Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent)
+    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    setVisible(false);
+    this->icemanCanPickup = icemanCanPickup;
+    this->protestorCanPickup = protestorCanPickup;
+    this->permanent = permanent;
+}
+
+Gold::~Gold() {
 
 }
 
-OilBarrel::~OilBarrel() {
+void Gold::doAction() {
+    if (!isAlive()) {
+        return;
+    }
+    else {
+        StudentWorld* thisWorld = getWorld();
+        IceMan* iceman = thisWorld->getIceMan();
 
+        int iceManX = iceman->getX(),
+            iceManY = iceman->getY(),
+            thisX = getX(),
+            thisY = getY();
+
+        if (this->isVisible() == false && std::abs(iceManX - thisX) <= 4 && std::abs(iceManY - thisY) <= 4) {
+            this->setVisible(true);
+            return;
+        }
+        //test this
+        if (this->icemanCanPickup == true && std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
+            setVisible(false);
+            setAlive(false);
+            thisWorld->decreaseGold();
+            iceman->increaseGold();
+            thisWorld->playSound(SOUND_GOT_GOODIE);
+            thisWorld->increaseScore(10);
+            return;
+        }
+
+        //NEED TO IMPLEMENT TEMPORARY STATE AND PICKUPABLE AFTER PROTESTORS ARE IMPLEMENTED
+    }
 }
+

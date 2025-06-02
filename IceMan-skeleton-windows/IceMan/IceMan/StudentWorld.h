@@ -41,11 +41,9 @@ public:
 	IceMan* getIceMan();
 
 	void decreaseOil();
-
-	int getOil() {
-		return this->numberOfOil;
-	}
 	
+	void decreaseGold();
+
 
 private:
 	Actor* iceField[64][60];

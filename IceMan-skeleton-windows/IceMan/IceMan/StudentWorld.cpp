@@ -27,7 +27,7 @@ int StudentWorld::init() {
 			boulderPosition.push_back({ randomX, randomY });
 
 			Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
-			iceField[randomX][randomY] = boulder;
+			//iceField[randomX][randomY] = boulder;
 			actionList.push_back(boulder);
 		}
 		else {
@@ -41,11 +41,22 @@ int StudentWorld::init() {
 		if (!overlap({ randomX, randomY })) {
 			OilBarrel* oil = new OilBarrel(IID_BARREL, randomX, randomY, GraphObject::right, 1, 2, this, "oil");
 
-			iceField[randomX][randomY] = oil;
+			//iceField[randomX][randomY] = oil;
 			actionList.push_back(oil);
 		}
 		else {
 			i--;
+		}
+	}
+
+	for (int i = 0; i < numberOfGold; i++) {
+		int randomX = rand() % 64,
+			randomY = rand() % 60;
+		if (!overlap({ randomX, randomY })) {
+			Gold* gold = new Gold(IID_GOLD, randomX, randomY, GraphObject::right, 1, 2, this, "gold", true, false, true);
+
+			//iceField[randomX][randomY] = gold;
+			actionList.push_back(gold);
 		}
 	}
 
@@ -60,7 +71,9 @@ int StudentWorld::init() {
 
 				if (i >= boulder_x && i <= boulder_x + 3 && j >= boulder_y && j <= boulder_y + 3) {
 					boulderHere = true;
-					break;
+					//break;
+					this->iceField[i][j] = nullptr;
+
 				}
 
 			}
@@ -96,12 +109,38 @@ int StudentWorld::move() {
 	}
 
 	//decLives();
-	//return GWSTATUS_PLAYER_DIED;
-	return 9;
+	return GWSTATUS_PLAYER_DIED;
+
+	//return 9;
 }
 
 void StudentWorld::cleanUp() {
 
+	//READ ACCESS VIOLATION INSIDE FIRST FOR LOOP DELEITNG ICE
+
+	if (iceman->isAlive()) {
+		delete iceman;
+		iceman = nullptr;
+	}
+
+
+	// its trying to access something that is null, but shouldnt the nullptr check and ice check handle this????
+	for (int i = 0; i < 64; i++) {
+		for (int j = 0; j < 60; j++) {
+			if (iceField[i][j] != nullptr && iceField[i][j]->getType() == "ice") {
+				delete iceField[i][j];
+				iceField[i][j] = nullptr;
+				cout << i << " " << j << endl;
+			}
+		}
+	}
+
+	//for (int i = 0; i < actionList.size(); i++) {
+	//	if (actionList[i] != nullptr) {
+	//		delete actionList[i];
+	//		actionList[i] = nullptr;
+	//	}
+	//}
 }
 
 void StudentWorld::showTextBar() {
@@ -114,7 +153,7 @@ void StudentWorld::showTextBar() {
 		gold = iceman->getNumberOfGold(),
 		oilLeftOnField = numberOfOil,
 		sonar = iceman->getNumberOfSonar(),
-		score = getScore(); //fix this
+		score = getScore(); 
 
 	string text = "Level: " + std::to_string(level) +
 		" Lives: " + std::to_string(lives) +
@@ -178,4 +217,8 @@ IceMan* StudentWorld::getIceMan() {
 
 void StudentWorld::decreaseOil() {
 	this->numberOfOil--;
+}
+
+void StudentWorld::decreaseGold() {
+	this->numberOfGold--;
 }

@@ -69,6 +69,8 @@ public:
 	void increaseOil();
 	int getNumberOfOil();
 
+	void increaseGold();
+
 	void doAction();
 
 
@@ -110,6 +112,7 @@ public:
 	Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 
 	void doAction();
+	virtual ~Ice();
 };
 
 
@@ -128,6 +131,7 @@ public:
 
 class Goodie : public Actor {
 private:
+
 public:
 	Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	virtual ~Goodie();
@@ -151,8 +155,13 @@ public:
 
 class Gold : public Goodie {
 private:
+	bool icemanCanPickup;
+	bool protestorCanPickup;
+	bool permanent;
 public:
-	Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+	Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent);
+	virtual ~Gold();
+	void doAction();
 
 };
 

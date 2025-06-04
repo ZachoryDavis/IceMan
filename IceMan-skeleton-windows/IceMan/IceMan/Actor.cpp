@@ -213,11 +213,12 @@ void Ice::doAction() {
 
 }
 
+
 Ice::~Ice() {
-   /* if (this->isAlive()) {
-        delete this;
-    }*/
+
 }
+
+
 
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
 	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
@@ -226,6 +227,9 @@ Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirectio
 }
 
 void Boulder::doAction() {
+	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
+        return;
+
 
 }
 
@@ -324,5 +328,13 @@ void Gold::doAction() {
 
         //NEED TO IMPLEMENT TEMPORARY STATE AND PICKUPABLE AFTER PROTESTORS ARE IMPLEMENTED
     }
-}
 
+}
+//Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+//    : IceMan(imageID, startX, startY, startingDirection, size, depth, studentWorld, 10, type) {
+//    setVisible(true);
+//}
+
+//void Squirt::doAction() {
+//    
+//}

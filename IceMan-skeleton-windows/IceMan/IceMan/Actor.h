@@ -120,6 +120,7 @@ public:
 class Boulder : public Actor {
 private:
 	bool isStable{};
+	bool isAlive = true;
 public:
 	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	void doAction();
@@ -176,12 +177,12 @@ public:
 };
 
 
-//wtf do we do with this
-//class Squirt : public IceMan {
-//
-//};
-// 
-//=================================================
+class Squirt : public IceMan {
+private:
+public:
+	Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+	void doAction() override;
+};
 
 
 #endif //ACTOR_H_

@@ -14,6 +14,7 @@ GameWorld* createStudentWorld(string assetDir)
 int StudentWorld::init() {
 
 	this->iceman = new IceMan(IID_PLAYER, 30, 60, GraphObject::right, 1, 0, this, 10, "player");
+	//actionList.push_back(iceman);
 
 	std::vector<std::pair<int, int>> boulderPosition;
 	numberOfBoulder = min<unsigned int>(getLevel() / 2 + 2, 9);
@@ -26,6 +27,7 @@ int StudentWorld::init() {
 		if (!overlap({ randomX, randomY })) {
 			boulderPosition.push_back({ randomX, randomY });
 
+
 			Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
 			//iceField[randomX][randomY] = boulder;
 			actionList.push_back(boulder);
@@ -33,6 +35,10 @@ int StudentWorld::init() {
 		else {
 			i--;
 		}
+
+		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+		//iceField[randomX][randomY] = boulder;
+		actionList.push_back(boulder);
 	}
 
 	for (int i = 0; i < numberOfOil; i++) {
@@ -109,9 +115,9 @@ int StudentWorld::move() {
 	}
 
 	//decLives();
-	return GWSTATUS_PLAYER_DIED;
+	//return GWSTATUS_PLAYER_DIED;
 
-	//return 9;
+	return 9;
 }
 
 void StudentWorld::cleanUp() {
@@ -135,12 +141,6 @@ void StudentWorld::cleanUp() {
 		}
 	}
 
-	//for (int i = 0; i < actionList.size(); i++) {
-	//	if (actionList[i] != nullptr) {
-	//		delete actionList[i];
-	//		actionList[i] = nullptr;
-	//	}
-	//}
 }
 
 void StudentWorld::showTextBar() {

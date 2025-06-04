@@ -119,11 +119,16 @@ public:
 
 class Boulder : public Actor {
 private:
-	bool isStable{};
+	int m_state;
+	int m_ticks = 0;
 	bool isAlive = true;
 public:
 	Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	void doAction();
+	int getState();
+	void changeState() { m_state++; };
+	int getTicks() { return m_ticks; };
+	int increaseTicks() { return m_ticks++; };
 };
 
 //================================================

@@ -32,6 +32,8 @@ public:
 
 	bool isBoulder(int x, int y);
 
+	bool belowBoulder(int x, int y);
+
 	bool overlap(std::pair<int, int>  coords);
 
 	void removeIce(int x, int y);

@@ -222,14 +222,59 @@ Ice::~Ice() {
 
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
 	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-	this->isStable = true;
+	m_state = 0;
 	setVisible(true);
 }
 
+
+int Boulder::getState() {
+	return m_state;
+}
+
+
 void Boulder::doAction() {
+
 	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
         return;
 
+    switch (m_state)
+    {
+
+    case 0: //Boulder is stable
+        if (getWorld()->belowBoulder(getX(), getY()) == true) {
+            changeState();
+            break;
+        }
+        else
+            break;
+
+    case 1: //Boulder is waiting to fall
+        if (getTicks() == 30) {
+            changeState();
+            break;
+        }
+        else {
+			increaseTicks();
+            break;
+        }
+
+    case 2: //Boulder is falling
+        if (getWorld()->belowBoulder(getX(), getY()) == false) {
+            setVisible(false);
+            setAlive(false);
+            getWorld()->playSound(SOUND_FALLING_ROCK);
+            getWorld()->increaseScore(100);
+            break;
+        }
+        else {
+            moveTo(getX(), getY() - 1);
+            getWorld()->playSound(SOUND_FALLING_ROCK);
+            break;
+		}
+
+    default:
+        break;
+    }
 
 }
 

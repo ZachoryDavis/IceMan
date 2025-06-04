@@ -190,6 +190,26 @@ bool StudentWorld::isBoulder(int x, int y) {
 //Pushed them into actionList, so that I can access them easily
 
 
+bool StudentWorld::belowBoulder(int x, int y) {
+	bool noIceBelow = true;
+
+	for (int i = 0; i < 4; i++) {
+
+		if (iceField[x + i][y - 1] != nullptr) {
+			noIceBelow = false;
+			break;
+		}
+
+		if (isBoulder(x + i, y - 1)) {
+			noIceBelow = false;
+			break;
+		}
+	}
+
+	return noIceBelow;
+}
+
+
 void StudentWorld::removeIce(int x, int y) {
 	if (iceField[x][y] != nullptr && iceField[x][y]->getType() == "ice") {
 		delete iceField[x][y];

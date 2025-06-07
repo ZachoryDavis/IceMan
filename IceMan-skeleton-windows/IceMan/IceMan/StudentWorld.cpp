@@ -195,12 +195,12 @@ bool StudentWorld::belowBoulder(int x, int y) {
 
 	for (int i = 0; i < 4; i++) {
 
-		if (iceField[x + i][y - 1] != nullptr) {
+		if (iceField[x + i][y - 1] != nullptr) { //Checks for ice below
 			noIceBelow = false;
 			break;
 		}
 
-		if (isBoulder(x + i, y - 1)) {
+		if (isBoulder(x + i, y - 1)) { //Checks for boulders below
 			noIceBelow = false;
 			break;
 		}
@@ -217,6 +217,33 @@ void StudentWorld::removeIce(int x, int y) {
 		playSound(SOUND_DIG);
 	}
 }
+
+
+bool StudentWorld::sonarSearch(int x, int y) {
+
+	playSound(SOUND_SONAR);
+	int radius = 12;
+	bool found = false;
+
+	for (Actor* actor : actionList) {
+		if (actor == nullptr)
+			continue;
+		string actorType = actor->getType();
+		if (actorType == "gold" || actorType == "oilbarrel") {
+			int actorX = actor->getX();
+			int actorY = actor->getY();
+
+			if (actorX >= x - radius && actorX <= x + radius && actorY >= y - radius && actorY <= y + radius) {
+				actor->setVisible(true);
+				found = true;
+			}
+
+		}
+	}
+
+	return found;
+}
+
 
 bool StudentWorld::overlap(std::pair<int, int> coords) {
 	for (int i = 0; i < actionList.size(); i++) {

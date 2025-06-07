@@ -38,6 +38,8 @@ public:
 
 	void removeIce(int x, int y);
 
+	bool sonarSearch(int x, int y);
+
 	std::vector<Actor*> getList();
 
 	IceMan* getIceMan();

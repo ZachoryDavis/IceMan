@@ -60,7 +60,7 @@ IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection,
 }
 
 IceMan::~IceMan() {
-	//TODO: IMPLEMENT
+	
 }
 
 void IceMan::setNumberOfSquirts(int squirts) {
@@ -196,6 +196,14 @@ void IceMan::doAction() {
             }
             break;
 
+        case 'Z':
+        case 'z':
+            if (this->numberOfSonarKits > 0) {
+                thisWorld->playSound(SOUND_SONAR);
+                setNumberOfSonar(getNumberOfSonar() - 1);
+                thisWorld->sonarSearch(getX(), getY());
+            }
+
         default:
             break;
         }
@@ -234,7 +242,7 @@ int Boulder::getState() {
 
 void Boulder::doAction() {
 
-	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
+	if (!isAlive) 
         return;
 
     switch (m_state)
@@ -261,7 +269,7 @@ void Boulder::doAction() {
     case 2: //Boulder is falling
         if (getWorld()->belowBoulder(getX(), getY()) == false) {
             setVisible(false);
-            setAlive(false);
+            setAlive(false); 
             getWorld()->playSound(SOUND_FALLING_ROCK);
             getWorld()->increaseScore(100);
             break;

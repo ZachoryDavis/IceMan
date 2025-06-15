@@ -1,7 +1,7 @@
 
 #include "Actor.h"
 #include "StudentWorld.h"
-
+#include <algorithm>
 
 Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
 	: GraphObject(imageID, startX, startY, startingDirection, size, depth), type(type) {
@@ -196,6 +196,18 @@ void IceMan::doAction() {
             }
             break;
 
+        case KEY_PRESS_TAB:
+            
+            //kinda works, but gold needs to be in a temporary state after it is dropped by iceman
+            if (numberOfGoldNuggets >= 1) {
+                numberOfGoldNuggets--;
+                //Gold* gold = new Gold(IID_GOLD, x, y, GraphObject::right, 1, 2, thisWorld, "gold", false, true, false, true);
+                Gold* gold = new Gold(IID_GOLD, x, y, GraphObject::right, 1, 2, thisWorld, "gold", true, true, false, true);
+                //iceField[randomX][randomY] = gold;
+                actionList.push_back(gold);
+            }
+            break;
+
         case 'Z':
         case 'z':
             if (this->numberOfSonarKits > 0) {
@@ -208,6 +220,14 @@ void IceMan::doAction() {
             break;
         }
     }
+}
+
+void IceMan::increaseSonar() {
+    this->numberOfSonarKits++;
+}
+
+int IceMan::getNumOfSonar() {
+    return numberOfSonarKits;
 }
 //====================================================================================================================================
 
@@ -242,14 +262,15 @@ int Boulder::getState() {
 
 void Boulder::doAction() {
 
-	if (!isAlive) 
+    StudentWorld* thisWorld = getWorld();
+	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
         return;
 
     switch (m_state)
     {
 
     case 0: //Boulder is stable
-        if (getWorld()->belowBoulder(getX(), getY()) == true) {
+        if (thisWorld->belowBoulder(getX(), getY()) == true) {
             changeState();
             break;
         }
@@ -267,18 +288,22 @@ void Boulder::doAction() {
         }
 
     case 2: //Boulder is falling
-        if (getWorld()->belowBoulder(getX(), getY()) == false) {
+        if (thisWorld->belowBoulder(getX(), getY()) == false) {
             setVisible(false);
-            setAlive(false); 
+            setAlive(false);
             getWorld()->playSound(SOUND_FALLING_ROCK);
             getWorld()->increaseScore(100);
             break;
         }
         else {
             moveTo(getX(), getY() - 1);
-            getWorld()->playSound(SOUND_FALLING_ROCK);
+            thisWorld->playSound(SOUND_FALLING_ROCK);
             break;
 		}
+
+        /*if (getX() == thisWorld->getIceMan()->getX() && getY() == thisWorld->getIceMan()->getY()) {
+            thisWorld->decLives();
+        }*/
 
     default:
         break;
@@ -339,23 +364,36 @@ void OilBarrel::doAction() {
     
 }
 
-Gold::Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent)
+Gold::Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent, bool visible)
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-    setVisible(false);
+    setVisible(visible);
     this->icemanCanPickup = icemanCanPickup;
     this->protestorCanPickup = protestorCanPickup;
     this->permanent = permanent;
+
+    this->ticksSinceDropped = 0;
 }
 
 Gold::~Gold() {
 
 }
 
+void Gold::increaseTicks() {
+    this->ticksSinceDropped++;
+}
+
+int Gold::getTicks() {
+    return this->ticksSinceDropped;
+}
+
+
 void Gold::doAction() {
     if (!isAlive()) {
         return;
     }
-    else {
+
+    //need to delete the instance from action list after it is deleted ???
+    else if (isAlive() && this->permanent == true) {
         StudentWorld* thisWorld = getWorld();
         IceMan* iceman = thisWorld->getIceMan();
 
@@ -363,6 +401,9 @@ void Gold::doAction() {
             iceManY = iceman->getY(),
             thisX = getX(),
             thisY = getY();
+
+        //can just do with triple nested if else but that is so ugly
+
 
         if (this->isVisible() == false && std::abs(iceManX - thisX) <= 4 && std::abs(iceManY - thisY) <= 4) {
             this->setVisible(true);
@@ -381,7 +422,28 @@ void Gold::doAction() {
 
         //NEED TO IMPLEMENT TEMPORARY STATE AND PICKUPABLE AFTER PROTESTORS ARE IMPLEMENTED
     }
+    else if (this->permanent == false) {
 
+        StudentWorld* thisWorld = getWorld();
+        IceMan* iceman = thisWorld->getIceMan();
+
+        int iceManX = iceman->getX(),
+            iceManY = iceman->getY(),
+            thisX = getX(),
+            thisY = getY();
+
+        //add protestor check within 3 blcoks later
+        if (this->getTicks() >= 30) {
+            this->setVisible(false);
+            return;
+        }
+
+        this->increaseTicks();
+        return;
+    }
+    else {
+        return;
+    }
 }
 //Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
 //    : IceMan(imageID, startX, startY, startingDirection, size, depth, studentWorld, 10, type) {
@@ -391,3 +453,67 @@ void Gold::doAction() {
 //void Squirt::doAction() {
 //    
 //}
+
+
+Water::Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent) 
+    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    this->permanent = false;
+    this->ticksSinceSpawn = 0;
+}
+
+Water::~Water() {
+
+}
+
+
+
+
+Sonar::Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    this->setVisible(true);
+    this->ticksSinceSpawn = 0;
+}
+
+void Sonar::doAction() {
+    StudentWorld* thisWorld = getWorld();
+    IceMan* iceman = thisWorld->getIceMan();
+    int tickLifeSpan = std::max<int>(100, 300 - 10 * thisWorld->getLevel());
+
+    int iceManX = iceman->getX(),
+        iceManY = iceman->getY(),
+        thisX = getX(),
+        thisY = getY();
+
+    if (!this->isAlive()) {
+        return;
+    }
+    else if (this->ticksSinceSpawn >= tickLifeSpan) {
+        this->setVisible(false);
+        this->setAlive(false);
+
+        return;
+    }
+    else {
+
+        if (std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
+            setVisible(false);
+            setAlive(false);
+            iceman->increaseSonar();
+            thisWorld->playSound(SOUND_GOT_GOODIE);
+            thisWorld->increaseScore(75);
+            return;
+        }
+    }
+}
+
+Sonar::~Sonar() {
+
+}
+
+void Sonar::increaseTicks() {
+    this->ticksSinceSpawn++;
+}
+
+int Sonar::getTicks() {
+    return this->ticksSinceSpawn;
+}

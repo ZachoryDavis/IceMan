@@ -71,6 +71,9 @@ public:
 
 	void increaseGold();
 
+	void increaseSonar();
+	int getNumOfSonar();
+
 	void doAction();
 
 
@@ -147,16 +150,25 @@ public:
 
 class Water : public Goodie {
 private:
+	bool permanent;
+	int ticksSinceSpawn;
 public:
-	Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
-
+	Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent);
+	virtual ~Water();
 };
 
 class Sonar : public Goodie {
 private:
+	bool permanent;
+	int ticksSinceSpawn;
+	
 public:
 	Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
+	void doAction();
+	~Sonar();
 
+	void increaseTicks();
+	int getTicks();
 };
 
 class Gold : public Goodie {
@@ -164,10 +176,15 @@ private:
 	bool icemanCanPickup;
 	bool protestorCanPickup;
 	bool permanent;
+
+	int ticksSinceDropped{};
 public:
-	Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent);
+	Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent, bool visible);
 	virtual ~Gold();
 	void doAction();
+
+	void increaseTicks();
+	int getTicks();
 
 };
 

@@ -48,6 +48,15 @@ public:
 	
 	void decreaseGold();
 
+	void spawnTickUnits();
+
+	void increaseTicks() {
+		ticks++;
+	}
+
+	int getTicks() {
+		return ticks;
+	}
 
 private:
 	Actor* iceField[64][60];
@@ -59,7 +68,8 @@ private:
 		numberOfBoulder,
 		numberOfOil,
 		numberOfProtestor,
-		currentLevelNumber = 0;
+		currentLevelNumber = 0,
+		ticks = 0;
 
 	
 };

@@ -59,7 +59,7 @@ int StudentWorld::init() {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
 		if (!overlap({ randomX, randomY })) {
-			Gold* gold = new Gold(IID_GOLD, randomX, randomY, GraphObject::right, 1, 2, this, "gold", true, false, true);
+			Gold* gold = new Gold(IID_GOLD, randomX, randomY, GraphObject::right, 1, 2, this, "gold", true, false, true, false);
 
 			//iceField[randomX][randomY] = gold;
 			actionList.push_back(gold);
@@ -102,9 +102,17 @@ int StudentWorld::move() {
 	// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
 	// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 
+
+	// a tick is counted as everytime something is asked to do something, so IE one tick is move being called once
+
+	// maybe to implement tick system, each actor can have a number of tick counter var that is checked every time move is called if thye are a 
+	// value that depends on tick system
 	showTextBar();
 
-	if (iceman->isAlive()) {
+	
+	spawnTickUnits();
+	//can put tickvalue inside sw that is incremented everytime this is called, can use modulus to calculate when gold/protestor should be spawned
+	if (iceman != nullptr && iceman->isAlive()) {
 		iceman->doAction();
 	}
 
@@ -114,36 +122,57 @@ int StudentWorld::move() {
 		}
 	}
 
+	for (int i = 0; i < actionList.size(); ) {
+		if (actionList[i] && !actionList[i]->isAlive()) {
+			delete actionList[i];
+			actionList.erase(actionList.begin() + i);
+		}
+		else {
+			i++;
+		}
+	}
+	increaseTicks();
+
 	//decLives();
 	//return GWSTATUS_PLAYER_DIED;
+	if (this->iceman->isAlive()) {
+		return GWSTATUS_CONTINUE_GAME;
+	}
+	else {
+		return GWSTATUS_PLAYER_DIED;
 
-	return 9;
+	}
+	
 }
 
 void StudentWorld::cleanUp() {
-
-	//READ ACCESS VIOLATION INSIDE FIRST FOR LOOP DELEITNG ICE
 
 	if (iceman->isAlive()) {
 		delete iceman;
 		iceman = nullptr;
 	}
 
-
-	// its trying to access something that is null, but shouldnt the nullptr check and ice check handle this????
 	for (int i = 0; i < 64; i++) {
 		for (int j = 0; j < 60; j++) {
 			if (iceField[i][j] != nullptr && iceField[i][j]->getType() == "ice") {
 				delete iceField[i][j];
 				iceField[i][j] = nullptr;
-				cout << i << " " << j << endl;
+				//cout << i << " " << j << endl;
 			}
 		}
 	}
 
+	for (int i = 0; i < actionList.size(); i++) {
+		if (actionList[i] != nullptr) {
+			delete actionList[i];
+			actionList[i] = nullptr;
+		}
+	}
 }
 
 void StudentWorld::showTextBar() {
+
+	//FIX THIS LOOK AT REQUIREMENTS IN PAGE 22
 	IceMan* iceman = getIceMan();
 
 	int level = getLevel(),
@@ -162,7 +191,9 @@ void StudentWorld::showTextBar() {
 		" Gold: " + std::to_string(gold) +
 		" Oil Left: " + std::to_string(oilLeftOnField) +
 		" Sonar: " + std::to_string(sonar) +
-		" Score: " + std::to_string(score);
+		" Score: " + std::to_string(score) + 
+		//remove line below after testing
+		" Ticks: " + std::to_string(getTicks());
 
 	setGameStatText(text);
 }
@@ -206,6 +237,7 @@ bool StudentWorld::belowBoulder(int x, int y) {
 		}
 	}
 
+
 	return noIceBelow;
 }
 
@@ -247,7 +279,7 @@ bool StudentWorld::sonarSearch(int x, int y) {
 
 bool StudentWorld::overlap(std::pair<int, int> coords) {
 	for (int i = 0; i < actionList.size(); i++) {
-		if (coords.first == actionList[i]->getX() && coords.second == actionList[i]->getY()) {
+		if (actionList[i] != nullptr && (coords.first == actionList[i]->getX() && coords.second == actionList[i]->getY())) {
 			return true;
 		}
 	}
@@ -268,4 +300,20 @@ void StudentWorld::decreaseOil() {
 
 void StudentWorld::decreaseGold() {
 	this->numberOfGold--;
+}
+
+void StudentWorld::spawnTickUnits() {
+	int goodieChance = getLevel() * 30 + 290;
+
+	//this works but it took like 2 min for anything to spawn?????
+	if (rand() % goodieChance == 0) {
+		if (rand() % 5 == 0) {
+			//playSound(SOUND_DIG);
+			Sonar* sonar = new Sonar(IID_SONAR, 0, 60, GraphObject::right, 1, 2, this, "sonar");
+			actionList.push_back(sonar);
+		}
+		else {
+			//implement spawning water, needs to check for open blocks not inhabited by ice
+		}
+	}
 }

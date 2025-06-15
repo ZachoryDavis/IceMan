@@ -58,6 +58,8 @@ public:
 		return ticks;
 	}
 
+	bool canAddWater(int x, int y);
+
 private:
 	Actor* iceField[64][60];
 	std::vector<Actor*> actionList;

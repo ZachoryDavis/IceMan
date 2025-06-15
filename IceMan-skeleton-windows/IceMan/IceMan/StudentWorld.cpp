@@ -306,14 +306,41 @@ void StudentWorld::spawnTickUnits() {
 	int goodieChance = getLevel() * 30 + 290;
 
 	//this works but it took like 2 min for anything to spawn?????
+
+	//this looks so disgusting wtf did i write
+
+	//check for the 1/goodieChance chance that a goodie is spawned
 	if (rand() % goodieChance == 0) {
-		if (rand() % 5 == 0) {
+
+		if (rand() % 5 == 0 && !overlap({ 0, 60 })) { // 1/5 chance that sonar is spawned
 			//playSound(SOUND_DIG);
 			Sonar* sonar = new Sonar(IID_SONAR, 0, 60, GraphObject::right, 1, 2, this, "sonar");
 			actionList.push_back(sonar);
 		}
-		else {
-			//implement spawning water, needs to check for open blocks not inhabited by ice
+		else {				  // 4/5 chance water is spawned
+			int waterX = rand() % 64,
+				waterY = rand() % 60;
+							  // check for requirement that water cannot spawn in blocked spots 
+			if (canAddWater(waterX, waterY) && !overlap({ waterX, waterY })) {
+
+				Water* water = new Water(IID_WATER_POOL, waterX, waterY, GraphObject::right, 1, 2, this, "water", false);
+				actionList.push_back(water);
+			}
 		}
 	}
+}
+
+
+bool StudentWorld::canAddWater(int x, int y) {
+	if (x < 0 || x + 3 >= 64 || y < 0 || y + 3 >= 60)
+		return false;
+
+	for (int i = x; i < x + 4; ++i) {
+		for (int j = y; j < y + 4; ++j) {
+			if (iceField[i][j] != nullptr) {
+				return false;
+			}
+		}
+	}
+	return true;
 }

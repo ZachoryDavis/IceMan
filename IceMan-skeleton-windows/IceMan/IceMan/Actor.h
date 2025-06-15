@@ -59,6 +59,9 @@ public:
 
 	void setNumberOfSquirts(int squirts);
 	int getNumberOfSquirts();
+	void increaseSquirts() {
+		this->numberOfSquirts += 5;
+	}
 
 	void setNumberOfSonar(int sonars);
 	int getNumberOfSonar();
@@ -73,6 +76,8 @@ public:
 
 	void increaseSonar();
 	int getNumOfSonar();
+
+	
 
 	void doAction();
 
@@ -155,6 +160,11 @@ private:
 public:
 	Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent);
 	virtual ~Water();
+
+	void doAction();
+
+	int getTicks();
+	void increaseTicks();
 };
 
 class Sonar : public Goodie {

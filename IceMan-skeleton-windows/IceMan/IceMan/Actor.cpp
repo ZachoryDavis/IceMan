@@ -457,8 +457,60 @@ void Gold::doAction() {
 
 Water::Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent) 
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    
+    this->setVisible(true);
     this->permanent = false;
     this->ticksSinceSpawn = 0;
+
+}
+
+void Water::doAction() {
+    if (!this->isAlive()) {
+        return;
+    }
+    else {
+        StudentWorld* thisWorld = getWorld();
+        IceMan* iceman = thisWorld->getIceMan();
+        int tickLifeSpan = std::max<int>(100, 300 - 10 * thisWorld->getLevel());
+
+        int iceManX = iceman->getX(),
+            iceManY = iceman->getY(),
+            thisX = getX(),
+            thisY = getY();
+
+        //std::cout << this->ticksSinceSpawn << std::endl;
+
+        if (!this->isAlive()) {
+            return;
+        }
+        else if (this->ticksSinceSpawn >= tickLifeSpan) {
+            this->setVisible(false);
+            this->setAlive(false);
+
+            return;
+        }
+        else {
+
+            if (std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
+                setVisible(false);
+                setAlive(false);
+                iceman->increaseSquirts();
+                thisWorld->playSound(SOUND_GOT_GOODIE);
+                thisWorld->increaseScore(100);
+                return;
+            }
+
+            increaseTicks();
+        }
+    }
+}
+
+int Water::getTicks() {
+    return this->ticksSinceSpawn;
+}
+
+void Water::increaseTicks() {
+    this->ticksSinceSpawn++;
 }
 
 Water::~Water() {
@@ -484,6 +536,8 @@ void Sonar::doAction() {
         thisX = getX(),
         thisY = getY();
 
+    //std::cout << this->ticksSinceSpawn << std::endl;
+
     if (!this->isAlive()) {
         return;
     }
@@ -503,6 +557,8 @@ void Sonar::doAction() {
             thisWorld->increaseScore(75);
             return;
         }
+
+        increaseTicks();
     }
 }
 

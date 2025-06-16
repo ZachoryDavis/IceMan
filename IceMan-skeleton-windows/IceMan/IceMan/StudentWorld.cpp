@@ -24,7 +24,7 @@ int StudentWorld::init() {
 	for (int i = 0; i < numberOfBoulder; i++) {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
-		if (!overlap({ randomX, randomY })) {
+		if (!overlap({ randomX, randomY }) && !isTooCloseToOther(randomX, randomY)) {
 			boulderPosition.push_back({ randomX, randomY });
 
 
@@ -36,15 +36,15 @@ int StudentWorld::init() {
 			i--;
 		}
 
-		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
-		//iceField[randomX][randomY] = boulder;
-		actionList.push_back(boulder);
+		//Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+		////iceField[randomX][randomY] = boulder;
+		//actionList.push_back(boulder);
 	}
 
 	for (int i = 0; i < numberOfOil; i++) {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
-		if (!overlap({ randomX, randomY })) {
+		if (!overlap({ randomX, randomY }) && !isTooCloseToOther(randomX, randomY)) {
 			OilBarrel* oil = new OilBarrel(IID_BARREL, randomX, randomY, GraphObject::right, 1, 2, this, "oil");
 
 			//iceField[randomX][randomY] = oil;
@@ -58,7 +58,7 @@ int StudentWorld::init() {
 	for (int i = 0; i < numberOfGold; i++) {
 		int randomX = rand() % 64,
 			randomY = rand() % 60;
-		if (!overlap({ randomX, randomY })) {
+		if (!overlap({ randomX, randomY }) && !isTooCloseToOther(randomX, randomY)) {
 			Gold* gold = new Gold(IID_GOLD, randomX, randomY, GraphObject::right, 1, 2, this, "gold", true, false, true, false);
 
 			//iceField[randomX][randomY] = gold;
@@ -134,53 +134,55 @@ int StudentWorld::move() {
 		}
 		actionList.push_back(newProtestor);
 		//ticks = 0;
-	}
-
-	int numberOfProtesters;
-	for (Actor* actor : actionList) {
-		if (actor && (actor->getType() == "protestor" || actor->getType() == "hardcoreprotestor") && actor->isAlive())
-			numberOfProtestor++;
-	}
-
-	spawnTickUnits();
-	//can put tickvalue inside sw that is incremented everytime this is called, can use modulus to calculate when gold/protestor should be spawned
-	if (iceman != nullptr && iceman->isAlive()) {
-		iceman->doAction();
-	}
-
-	for (int i = 0; i < actionList.size(); i++) {
-		if (actionList[i]->isAlive()) {
-			actionList[i]->doAction();
 		}
-	}
 
-	for (int i = 0; i < actionList.size(); ) {
-		if (actionList[i] && !actionList[i]->isAlive()) {
-			delete actionList[i];
-			actionList.erase(actionList.begin() + i);
+		int numberOfProtesters;
+		for (Actor* actor : actionList) {
+			if (actor && (actor->getType() == "protestor" || actor->getType() == "hardcoreprotestor") && actor->isAlive())
+				numberOfProtestor++;
+		}
+
+		spawnTickUnits();
+		//can put tickvalue inside sw that is incremented everytime this is called, can use modulus to calculate when gold/protestor should be spawned
+		if (iceman != nullptr && iceman->isAlive()) {
+			iceman->doAction();
+		}
+
+		for (int i = 0; i < actionList.size(); i++) {
+			if (actionList[i]->isAlive()) {
+				actionList[i]->doAction();
+			}
+		}
+
+		for (int i = 0; i < actionList.size(); ) {
+			if (actionList[i] && !actionList[i]->isAlive()) {
+				delete actionList[i];
+				actionList.erase(actionList.begin() + i);
+			}
+			else {
+				i++;
+			}
+		}
+		increaseTicks();
+
+		//decLives();
+		//return GWSTATUS_PLAYER_DIED;
+
+		if (numberOfOil == 0) {
+			playSound(SOUND_FINISHED_LEVEL);
+			return GWSTATUS_FINISHED_LEVEL;
+		}
+		if (this->iceman->isAlive()) {
+			return GWSTATUS_CONTINUE_GAME;
 		}
 		else {
-			i++;
+			return GWSTATUS_PLAYER_DIED;
+
 		}
-	}
-	increaseTicks();
-
-	//decLives();
-	//return GWSTATUS_PLAYER_DIED;
-
-	if (numberOfOil == 0) {
-		playSound(SOUND_FINISHED_LEVEL);
-		return GWSTATUS_FINISHED_LEVEL;
-	}
-	if (this->iceman->isAlive()) {
-		return GWSTATUS_CONTINUE_GAME;
-	}
-	else {
-		return GWSTATUS_PLAYER_DIED;
-
-	}
 
 }
+
+
 
 void StudentWorld::cleanUp() {
 
@@ -447,6 +449,7 @@ bool StudentWorld::overlap(std::pair<int, int> coords) {
 			return true;
 		}
 	}
+
 	return false;
 }
 
@@ -486,7 +489,7 @@ void StudentWorld::spawnTickUnits() {
 		int waterX = rand() % 64,
 			waterY = rand() % 60;
 		// check for requirement that water cannot spawn in blocked spots 
-		if (canAddWater(waterX, waterY) && !overlap({ waterX, waterY })) {
+		if (canAddWater(waterX, waterY) && !overlap({ waterX, waterY }) && !isTooCloseToOther(waterX, waterY)) {
 
 			Water* water = new Water(IID_WATER_POOL, waterX, waterY, GraphObject::right, 1, 2, this, "water", false);
 			actionList.push_back(water);
@@ -508,4 +511,17 @@ bool StudentWorld::canAddWater(int x, int y) {
 		}
 	}
 	return true;
+}
+
+bool StudentWorld::isTooCloseToOther(int x, int y) {
+	for (Actor* actor : actionList) {
+		if (actor != nullptr) {
+			int xDiff = actor->getX() - x;
+			int  yDiff = actor->getY() - y;
+			if (std::sqrt(xDiff * xDiff + yDiff * yDiff) < 6) {
+				return true; 
+			}
+		}
+	}
+	return false;
 }

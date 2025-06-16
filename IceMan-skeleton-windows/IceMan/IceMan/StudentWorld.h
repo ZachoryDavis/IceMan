@@ -91,6 +91,8 @@ public:
 
 	bool canAddWater(int x, int y);
 
+	bool isTooCloseToOther(int x, int y);
+
 private:
 	Actor* iceField[64][60];
 	std::vector<Actor*> actionList;
@@ -106,5 +108,6 @@ private:
 
 	
 };
+
 
 #endif // STUDENTWORLD_H_

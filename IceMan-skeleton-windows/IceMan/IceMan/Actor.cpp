@@ -169,7 +169,7 @@ void IceMan::doAction() {
             if (getDirection() != up) {
                 this->setDirection(up);
             }
-            if (getY() + iceManSize <= 59) {
+            if (getY() + iceManSize <= 64) {
                 bool blocked = false;
                 for (int new_x = 0; new_x < iceManSize; ++new_x) {
                     if (thisWorld->isBoulder(getX() + new_x, getY() + iceManSize)) {

@@ -110,7 +110,7 @@ int StudentWorld::move() {
 	int maxNumberOfProtestor = min(15, static_cast<int>(2 + currentLevelNumber * 1.5));
 	int probabilityOfHardcore = min(90, currentLevelNumber * 30 + 290);
 
-	ticks++;
+	//ticks++;
 
 
 	//******************************
@@ -133,7 +133,7 @@ int StudentWorld::move() {
 			newProtestor = new RegularProtestor(IID_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 5, "protestor");
 		}
 		actionList.push_back(newProtestor);
-		ticks = 0;
+		//ticks = 0;
 	}
 
 	int numberOfProtesters;
@@ -400,8 +400,8 @@ bool StudentWorld::canAddWater(int x, int y) {
 	if (x < 0 || x + 3 >= 64 || y < 0 || y + 3 >= 60)
 		return false;
 
-	for (int i = x; i < x + 4; ++i) {
-		for (int j = y; j < y + 4; ++j) {
+	for (int i = x; i < x + 4; i++) {
+		for (int j = y; j < y + 4; j++) {
 			if (iceField[i][j] != nullptr) {
 				return false;
 			}

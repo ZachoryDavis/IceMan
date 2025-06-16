@@ -89,7 +89,7 @@ int StudentWorld::init() {
 			}
 
 			else if (!boulderHere) {
-					this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
+				this->iceField[i][j] = new Ice(IID_ICE, i, j, GraphObject::right, 0.25, 3, this, "ice");
 			}
 
 		}
@@ -141,7 +141,7 @@ int StudentWorld::move() {
 		if (actor && (actor->getType() == "protestor" || actor->getType() == "hardcoreprotestor") && actor->isAlive())
 			numberOfProtestor++;
 	}
-	
+
 	spawnTickUnits();
 	//can put tickvalue inside sw that is incremented everytime this is called, can use modulus to calculate when gold/protestor should be spawned
 	if (iceman != nullptr && iceman->isAlive()) {
@@ -179,7 +179,7 @@ int StudentWorld::move() {
 		return GWSTATUS_PLAYER_DIED;
 
 	}
-	
+
 }
 
 void StudentWorld::cleanUp() {
@@ -199,12 +199,18 @@ void StudentWorld::cleanUp() {
 		}
 	}
 
-	for (int i = 0; i < actionList.size(); i++) {
-		if (actionList[i] != nullptr) {
-			delete actionList[i];
-			actionList[i] = nullptr;
-		}
+
+	for (size_t i = 0; i < actionList.size(); ++i) {
+		delete actionList[i];
+		actionList[i] = nullptr;
 	}
+	actionList.clear();
+	//for (int i = 0; i < actionList.size(); i++) {
+	//	if (actionList[i] != nullptr) {
+	//		delete actionList[i];
+	//		actionList[i] = nullptr;
+	//	}
+	//}
 }
 
 void StudentWorld::showTextBar() {
@@ -219,7 +225,7 @@ void StudentWorld::showTextBar() {
 		gold = iceman->getNumberOfGold(),
 		oilLeftOnField = numberOfOil,
 		sonar = iceman->getNumberOfSonar(),
-		score = getScore(); 
+		score = getScore();
 
 	string text = "Level: " + std::to_string(level) +
 		" Lives: " + std::to_string(lives) +
@@ -228,7 +234,7 @@ void StudentWorld::showTextBar() {
 		" Gold: " + std::to_string(gold) +
 		" Oil Left: " + std::to_string(oilLeftOnField) +
 		" Sonar: " + std::to_string(sonar) +
-		" Score: " + std::to_string(score) + 
+		" Score: " + std::to_string(score) +
 		//remove line below after testing
 		" Ticks: " + std::to_string(getTicks());
 
@@ -245,8 +251,8 @@ StudentWorld* StudentWorld::getWorld() {
 bool StudentWorld::isBoulder(int x, int y) {
 	for (Actor* actor : actionList) {
 		if (actor != nullptr && actor->getType() == "boulder") {
-			int boulder_x = actor -> getX();
-			int boulder_y = actor -> getY();
+			int boulder_x = actor->getX();
+			int boulder_y = actor->getY();
 			if (x >= boulder_x && x <= boulder_x + 3 && y >= boulder_y && y <= boulder_y + 3) {
 				return true;
 			}
@@ -371,21 +377,21 @@ void StudentWorld::spawnTickUnits() {
 	//check for the 1/goodieChance chance that a goodie is spawned
 	//if (rand() % goodieChance == 0) {
 
-		if (goodieChance == 0 && !overlap({ 0, 59 })) { // 1/5 chance that sonar is spawned
-			//playSound(SOUND_DIG);
-			Sonar* sonar = new Sonar(IID_SONAR, 0, 59, GraphObject::right, 1, 2, this, "sonar");
-			actionList.push_back(sonar);
-		}
-		else {				  // 4/5 chance water is spawned
-			int waterX = rand() % 64,
-				waterY = rand() % 60;
-							  // check for requirement that water cannot spawn in blocked spots 
-			if (canAddWater(waterX, waterY) && !overlap({ waterX, waterY })) {
+	if (goodieChance == 0 && !overlap({ 0, 59 })) { // 1/5 chance that sonar is spawned
+		//playSound(SOUND_DIG);
+		Sonar* sonar = new Sonar(IID_SONAR, 0, 59, GraphObject::right, 1, 2, this, "sonar");
+		actionList.push_back(sonar);
+	}
+	else {				  // 4/5 chance water is spawned
+		int waterX = rand() % 64,
+			waterY = rand() % 60;
+		// check for requirement that water cannot spawn in blocked spots 
+		if (canAddWater(waterX, waterY) && !overlap({ waterX, waterY })) {
 
-				Water* water = new Water(IID_WATER_POOL, waterX, waterY, GraphObject::right, 1, 2, this, "water", false);
-				actionList.push_back(water);
-			}
+			Water* water = new Water(IID_WATER_POOL, waterX, waterY, GraphObject::right, 1, 2, this, "water", false);
+			actionList.push_back(water);
 		}
+	}
 	//}
 }
 

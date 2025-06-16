@@ -88,9 +88,10 @@ public:
 
 class Protestor : public Human {
 private:
+	bool visible;
 public:
 	Protestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
-
+	virtual ~Protestor();
 };
 
 class RegularProtestor : public Protestor {
@@ -179,7 +180,7 @@ class Sonar : public Goodie {
 private:
 	bool permanent;
 	int ticksSinceSpawn;
-	
+
 public:
 	Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	void doAction();

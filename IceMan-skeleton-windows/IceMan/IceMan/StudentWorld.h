@@ -18,6 +18,23 @@ public:
 	{
 	}
 
+	~StudentWorld() {
+		delete this->iceman;
+		
+		for (auto x : actionList) {
+			delete x;
+		}
+		actionList.clear();
+
+		for (int i = 0; i < 64; i++) {
+			for (int j = 0; j < 60; j++) {
+				if (iceField[i][j] != nullptr) {
+					delete iceField[i][j];
+				}
+			}
+		}
+	}
+
 	virtual int init();
 
 	virtual int move();

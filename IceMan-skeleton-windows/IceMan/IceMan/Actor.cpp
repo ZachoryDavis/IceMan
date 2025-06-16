@@ -3,28 +3,28 @@
 #include <algorithm>
 
 Actor::Actor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
-	: GraphObject(imageID, startX, startY, startingDirection, size, depth), type(type) {
-	this->studentWorld = studentWorld;
-	this->alive = true;
+    : GraphObject(imageID, startX, startY, startingDirection, size, depth), type(type) {
+    this->studentWorld = studentWorld;
+    this->alive = true;
 }
 
 Actor::~Actor() {
-	//TODO: IMPLEMENT
+    //TODO: IMPLEMENT
 }
 
 bool Actor::isAlive() {
-	return alive;
+    return alive;
 }
 
 StudentWorld* Actor::getWorld() {
-	return this->studentWorld;
+    return this->studentWorld;
 }
 
 std::string Actor::getType() {
-	if (this->type != "")
-		return this->type;
-	else
-		return ""; //default variable for when the cell is empty, the program doesnt try to return a null value
+    if (this->type != "")
+        return this->type;
+    else
+        return ""; //default variable for when the cell is empty, the program doesnt try to return a null value
 }
 
 void Actor::setAlive(bool aliveStatus) {
@@ -37,53 +37,53 @@ Human::Human(int imageID, int startX, int startY, Direction startingDirection, d
 }
 
 Human::~Human() {
-	//TODO: IMPLEMENT
+    //TODO: IMPLEMENT
 }
 
 void Human::setHealth(int health) {
-	this->health = health;
+    this->health = health;
 }
 
 int Human::getHealth() {
-	return this->health;
+    return this->health;
 }
 
 //====================================================================================================================================
 IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
-	: Human(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type) {
-	setHealth(10);
-	this->numberOfSquirts = 5;
-	this->numberOfSonarKits = 1;
-	this->numberOfGoldNuggets = 0;
-	setVisible(true);
+    : Human(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type) {
+    setHealth(10);
+    this->numberOfSquirts = 5;
+    this->numberOfSonarKits = 1;
+    this->numberOfGoldNuggets = 0;
+    setVisible(true);
 }
 
 IceMan::~IceMan() {
-	
+
 }
 
 void IceMan::setNumberOfSquirts(int squirts) {
-	this->numberOfSquirts = squirts;
+    this->numberOfSquirts = squirts;
 }
 
 int IceMan::getNumberOfSquirts() {
-	return this->numberOfSquirts;
+    return this->numberOfSquirts;
 }
 
 void IceMan::setNumberOfSonar(int sonar) {
-	this->numberOfSonarKits = sonar;
+    this->numberOfSonarKits = sonar;
 }
 
 int IceMan::getNumberOfSonar() {
-	return this->numberOfSonarKits;
+    return this->numberOfSonarKits;
 }
 
 void IceMan::setNumberOfGold(int gold) {
-	this->numberOfGoldNuggets = gold;
+    this->numberOfGoldNuggets = gold;
 }
 
 int IceMan::getNumberOfGold() {
-	return this->numberOfGoldNuggets;
+    return this->numberOfGoldNuggets;
 }
 
 void IceMan::increaseOil() {
@@ -103,7 +103,7 @@ void IceMan::increaseGold() {
 void IceMan::doAction() {
     if (!isAlive()) {
         return;
-	}
+    }
     int keyPress;
     StudentWorld* thisWorld = getWorld();
     const int iceManSize = 4;
@@ -119,10 +119,10 @@ void IceMan::doAction() {
             }
         }
     }
-   
+
     ///////////////////////////////////////////////////////////////
 
-  
+
     ///////////////////////////////////////////////////
     if (thisWorld->getKey(keyPress)) {
         switch (keyPress)
@@ -200,7 +200,7 @@ void IceMan::doAction() {
             break;
 
         case KEY_PRESS_TAB:
-            
+
             //kinda works, but gold needs to be in a temporary state after it is dropped by iceman
             if (numberOfGoldNuggets >= 1) {
                 numberOfGoldNuggets--;
@@ -246,8 +246,8 @@ int IceMan::getNumOfSonar() {
 
 
 Ice::Ice(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
-	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-	setVisible(true);
+    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    setVisible(true);
 }
 
 void Ice::doAction() {
@@ -256,20 +256,19 @@ void Ice::doAction() {
 
 
 Ice::~Ice() {
-
 }
 
 
 
 Boulder::Boulder(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
-	: Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-	m_state = 0;
-	setVisible(true);
+    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+    m_state = 0;
+    setVisible(true);
 }
 
 
 int Boulder::getState() {
-	return m_state;
+    return m_state;
 }
 
 
@@ -277,7 +276,7 @@ void Boulder::doAction() {
 
     StudentWorld* thisWorld = getWorld();
     IceMan* iceman = getWorld()->getIceMan();
-	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
+    if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
         return;
 
     switch (m_state)
@@ -297,7 +296,7 @@ void Boulder::doAction() {
             break;
         }
         else {
-			increaseTicks();
+            increaseTicks();
             break;
         }
 
@@ -305,7 +304,7 @@ void Boulder::doAction() {
     {
 
         //Iceman is leaving a dangaling pointer or something after he dies
-		//Game crashes when you try to start a new game after IceMan dies
+        //Game crashes when you try to start a new game after IceMan dies
 
 
 
@@ -346,8 +345,8 @@ void Boulder::doAction() {
 
 
 
-Goodie::Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type) 
-    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type){
+Goodie::Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+    : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
 
 }
 
@@ -356,7 +355,7 @@ Goodie::~Goodie() {
 }
 
 void Goodie::doAction() {
-    
+
 }
 
 
@@ -387,16 +386,16 @@ void OilBarrel::doAction() {
         }
         //test this
         if (std::abs(iceManX - thisX) <= 3 && std::abs(iceManY - thisY) <= 3) {
-            setVisible(false);         
-            setAlive(false);   
+            setVisible(false);
+            setAlive(false);
             thisWorld->decreaseOil();
             iceman->increaseOil();
-            thisWorld->playSound(SOUND_FOUND_OIL); 
-            thisWorld->increaseScore(1000);        
+            thisWorld->playSound(SOUND_FOUND_OIL);
+            thisWorld->increaseScore(1000);
             return;
         }
     }
-    
+
 }
 
 Gold::Gold(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool icemanCanPickup, bool protestorCanPickup, bool permanent, bool visible)
@@ -482,9 +481,9 @@ void Gold::doAction() {
 }
 
 
-Water::Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent) 
+Water::Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent)
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-    
+
     this->setVisible(true);
     this->permanent = false;
     this->ticksSinceSpawn = 0;
@@ -492,20 +491,23 @@ Water::Water(int imageID, int startX, int startY, Direction startingDirection, d
 }
 
 void Water::doAction() {
+
+    StudentWorld* thisWorld = getWorld();
+    IceMan* iceman = thisWorld->getIceMan();
+    int tickLifeSpan = std::max<int>(100, 300 - 10 * thisWorld->getLevel());
+
+    int iceManX = iceman->getX(),
+        iceManY = iceman->getY(),
+        thisX = getX(),
+        thisY = getY();
+
     if (!this->isAlive()) {
         return;
     }
     else {
-        StudentWorld* thisWorld = getWorld();
-        IceMan* iceman = thisWorld->getIceMan();
-        int tickLifeSpan = std::max<int>(100, 300 - 10 * thisWorld->getLevel());
+       
 
-        int iceManX = iceman->getX(),
-            iceManY = iceman->getY(),
-            thisX = getX(),
-            thisY = getY();
-
-        //std::cout << this->ticksSinceSpawn << std::endl;
+        std::cout << this->ticksSinceSpawn << std::endl;
 
         if (!this->isAlive()) {
             return;
@@ -553,47 +555,47 @@ Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection,
 
 
 void Squirt::doAction() {
-        if (!isAlive()) 
+    if (!isAlive())
         return;
 
-        if (travelDistance == 0) {
-            setAlive(false);
-            setVisible(false);
-            return;
-        }
+    if (travelDistance == 0) {
+        setAlive(false);
+        setVisible(false);
+        return;
+    }
 
-        // Calculate next position
-        int nextX = getX();
-        int nextY = getY();
-        switch (getDirection()) {
-        case up:    nextY += 1; break;
-        case down:  nextY -= 1; break;
-        case left:  nextX -= 1; break;
-        case right: nextX += 1; break;
-        default: break;
-        }
+    // Calculate next position
+    int nextX = getX();
+    int nextY = getY();
+    switch (getDirection()) {
+    case up:    nextY += 1; break;
+    case down:  nextY -= 1; break;
+    case left:  nextX -= 1; break;
+    case right: nextX += 1; break;
+    default: break;
+    }
 
-        // Check bounds
-        if (nextX < 0 || nextX >= 64 || nextY < 0 || nextY >= 60) {
-            setAlive(false);
-            setVisible(false);
-            return;
-        }
+    // Check bounds
+    if (nextX < 0 || nextX >= 64 || nextY < 0 || nextY >= 60) {
+        setAlive(false);
+        setVisible(false);
+        return;
+    }
 
-        StudentWorld* world = getWorld();
-        // Check for ice or boulder at next position
-        if (world->isBoulder(nextX, nextY) || world->isIce(nextX, nextY)) {
-            setAlive(false);
-            setVisible(false);
-            return;
-        }
-        
+    StudentWorld* world = getWorld();
+    // Check for ice or boulder at next position
+    if (world->isBoulder(nextX, nextY) || world->isIce(nextX, nextY)) {
+        setAlive(false);
+        setVisible(false);
+        return;
+    }
 
 
-        // Move squirt
-        moveTo(nextX, nextY);
-        travelDistance--;
-    
+
+    // Move squirt
+    moveTo(nextX, nextY);
+    travelDistance--;
+
 }
 
 
@@ -705,4 +707,8 @@ int Sonar::getTicks() {
 //
 //HardcoreProtestor::~HardcoreProtestor() {
 //
+//}
+//
+//Protestor::~Protestor() {
+//    
 //}

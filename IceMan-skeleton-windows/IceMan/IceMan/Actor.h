@@ -95,17 +95,23 @@ public:
 
 class RegularProtestor : public Protestor {
 private:
+	int numSquaresToMoveInCurrentDirection;
+	bool leaveTheOilField;
 public:
 	//TODO: IMPLEMENT CONSTRUCTOR AND CLASS VARS
 	RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
+	void doAction();
 	virtual ~RegularProtestor();
 };
 
 class HardcoreProtestor : public Protestor {
 private:
+	int numSquaresToMoveInCurrentDirection;
+	bool leaveTheOilField;
 public:
 	HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
-
+	void doAction();
+	virtual ~HardcoreProtestor();
 	//TODO: IMPLEMENT
 };
 

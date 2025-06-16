@@ -101,6 +101,9 @@ void IceMan::increaseGold() {
 //Added boundry checking for boulders
 //Added checking for Ice to remove it if iceman moves over it
 void IceMan::doAction() {
+    if (!isAlive()) {
+        return;
+	}
     int keyPress;
     StudentWorld* thisWorld = getWorld();
     const int iceManSize = 4;
@@ -215,6 +218,7 @@ void IceMan::doAction() {
                 setNumberOfSonar(getNumberOfSonar() - 1);
                 thisWorld->sonarSearch(getX(), getY());
             }
+            break;
 
         case KEY_PRESS_SPACE:
 
@@ -272,6 +276,7 @@ int Boulder::getState() {
 void Boulder::doAction() {
 
     StudentWorld* thisWorld = getWorld();
+    IceMan* iceman = getWorld()->getIceMan();
 	if (!isAlive) //NGL I have no idea how the boulder would ever not be alive but packet said to check
         return;
 
@@ -297,6 +302,28 @@ void Boulder::doAction() {
         }
 
     case 2: //Boulder is falling
+    {
+
+        //Iceman is leaving a dangaling pointer or something after he dies
+		//Game crashes when you try to start a new game after IceMan dies
+
+
+
+        // Check for collision with IceMan
+        IceMan* iceman = thisWorld->getIceMan();
+        int boulderX = getX();
+        int boulderY = getY();
+        int icemanX = iceman->getX();
+        int icemanY = iceman->getY();
+
+        bool overlap = !(boulderX + 3 < icemanX || boulderX > icemanX + 3 ||
+            boulderY + 3 < icemanY || boulderY > icemanY + 3);
+
+        if (overlap && iceman->isAlive()) {
+            iceman->setHealth(0);
+            iceman->setAlive(false); // Optionally mark as dead immediately
+        }
+
         if (thisWorld->belowBoulder(getX(), getY()) == false) {
             setVisible(false);
             setAlive(false);
@@ -308,17 +335,16 @@ void Boulder::doAction() {
             moveTo(getX(), getY() - 1);
             thisWorld->playSound(SOUND_FALLING_ROCK);
             break;
-		}
-
-        /*if (getX() == thisWorld->getIceMan()->getX() && getY() == thisWorld->getIceMan()->getY()) {
-            thisWorld->decLives();
-        }*/
+        }
+    }
 
     default:
         break;
     }
 
 }
+
+
 
 Goodie::Goodie(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type) 
     : Actor(imageID, startX, startY, startingDirection, size, depth, studentWorld, type){
@@ -456,17 +482,6 @@ void Gold::doAction() {
 }
 
 
-//Sonar::Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
-//    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-//    setVisible(false);
-//}
-//
-//
-//void Sonar::doAction() {
-//    
-//}
-
-
 Water::Water(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type, bool permanent) 
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
     
@@ -598,8 +613,6 @@ void Sonar::doAction() {
         thisX = getX(),
         thisY = getY();
 
-    //std::cout << this->ticksSinceSpawn << std::endl;
-
     if (!this->isAlive()) {
         return;
     }
@@ -635,3 +648,61 @@ void Sonar::increaseTicks() {
 int Sonar::getTicks() {
     return this->ticksSinceSpawn;
 }
+
+//**************************
+//Something below is supposidly not matching the header functions but it doesn't show an error until you try to compile
+//**************************
+
+
+//RegularProtestor::RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+//    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
+//{
+//    this->setVisible(true);
+//    setDirection(left);
+//
+//    // Random number of squares to move in current direction (8 to 60)
+//    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
+//
+//    setHealth(5);
+//
+//    leaveTheOilField = false;
+//
+//}
+//
+//
+//void RegularProtestor::doAction() {
+//    if (isAlive() == false) {
+//        return;
+//	}
+//}
+//
+//
+//RegularProtestor::~RegularProtestor() {
+//    
+//}
+//
+//
+//HardcoreProtestor::HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+//    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
+//{
+//    this->setVisible(true);
+//    setDirection(left);
+//
+//    // Random number of squares to move in current direction (8 to 60)
+//    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
+//
+//    setHealth(20);
+//
+//    leaveTheOilField = false;
+//
+//}
+//
+//
+//void HardcoreProtestor::doAction() {
+//
+//}
+//
+//
+//HardcoreProtestor::~HardcoreProtestor() {
+//
+//}

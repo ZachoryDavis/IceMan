@@ -104,13 +104,43 @@ int StudentWorld::move() {
 	// This code is here merely to allow the game to build, run, and terminate after you hit enter a few times.
 	// Notice that the return value GWSTATUS_PLAYER_DIED will cause our framework to end the current level.
 
-
-	// a tick is counted as everytime something is asked to do something, so IE one tick is move being called once
-
-	// maybe to implement tick system, each actor can have a number of tick counter var that is checked every time move is called if thye are a 
-	// value that depends on tick system
 	showTextBar();
 
+	int T = max(25, 200 - currentLevelNumber);
+	int maxNumberOfProtestor = min(15, static_cast<int>(2 + currentLevelNumber * 1.5));
+	int probabilityOfHardcore = min(90, currentLevelNumber * 30 + 290);
+
+	ticks++;
+
+
+	//******************************
+	//The stuff above is for the stuff below that's currently commented out because none of it works!!!!
+	//No idea what I'm doing wrong, internet says its something to do with protestor cpp functions not matching
+	//the .h functions idk I gave up on it for now
+	//******************************
+
+
+	//if (ticks >= T && numberOfProtestor < maxNumberOfProtestor) {
+	//	// Decide protestor type
+	//	int randVal = rand() % 100;
+	//	Actor* newProtestor = nullptr;
+	//	if (randVal < probabilityOfHardcore) {
+	//		// Spawn HardcoreProtestor
+	//		newProtestor = new HardcoreProtestor(IID_HARD_CORE_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 20, "hardcoreprotestor");
+	//	}
+	//	else {
+	//		// Spawn RegularProtestor
+	//		newProtestor = new RegularProtestor(IID_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 5, "protestor");
+	//	}
+	//	actionList.push_back(newProtestor);
+	//	ticks = 0;
+	//}
+
+	//int numberOfProtesters 
+	for (Actor* actor : actionList) {
+		if (actor && (actor->getType() == "protestor" || actor->getType() == "hardcoreprotestor") && actor->isAlive())
+			numberOfProtestor++;
+	}
 	
 	spawnTickUnits();
 	//can put tickvalue inside sw that is incremented everytime this is called, can use modulus to calculate when gold/protestor should be spawned
@@ -137,6 +167,11 @@ int StudentWorld::move() {
 
 	//decLives();
 	//return GWSTATUS_PLAYER_DIED;
+
+	if (numberOfOil == 0) {
+		playSound(SOUND_FINISHED_LEVEL);
+		return GWSTATUS_FINISHED_LEVEL;
+	}
 	if (this->iceman->isAlive()) {
 		return GWSTATUS_CONTINUE_GAME;
 	}

@@ -246,6 +246,106 @@ StudentWorld* StudentWorld::getWorld() {
 }
 
 
+bool StudentWorld::itemMoveUp(int x, int y) {
+	bool canMove = false;
+	for (int i = x; i < x + 4; i++)
+	{
+		if (y < 60)
+		{
+			if (iceField[i][y + 4] == nullptr)
+				canMove = true;
+			else
+				return false;
+		}
+		else
+			return false;
+
+		if (isBoulder(x, y + 1))
+			return false;
+	}
+	return canMove;
+}
+
+
+bool StudentWorld::itemMoveDown(int x, int y)
+{
+	bool canMove = false;
+	for (int i = x; i < x + 4; i++)
+	{
+		if (y > 0)
+		{
+			if (iceField[i][y - 1] == nullptr)
+				canMove = true;
+			else
+				return false;
+
+			if (isBoulder(x, y - 1))
+				return false;
+		}
+		else
+			return false;
+	}
+	return canMove;
+}
+
+
+bool StudentWorld::itemMoveLeft(int x, int y)
+{
+	bool canMove = false;
+	for (int j = y; j < y + 4; j++)
+	{
+		if (x > 0)
+		{
+			if (iceField[x - 1][j] == nullptr)
+				canMove = true;
+			else
+				return false;
+		}
+		else
+			return false;
+
+		if (isBoulder(x - 1, y))
+			return false;
+
+	}
+	return canMove;
+}
+
+
+bool StudentWorld::itemMoveRight(int x, int y)
+{
+	bool canMove = false;
+	for (int j = y; j < y + 4; j++)
+	{
+		if (x < 60)
+		{
+			if (iceField[x + 4][j] == nullptr)
+				canMove = true;
+			else
+				return false;
+		}
+		else
+			return false;
+
+		if (isBoulder(x + 1, y))
+			return false;
+	}
+	return canMove;
+}
+
+
+bool StudentWorld::atIntersection(int x, int y) {
+	int numberWays = 0;
+	if (itemMoveUp(x, y) || itemMoveDown(x, y))
+		numberWays++;
+	if (itemMoveRight(x, y) || itemMoveLeft(x, y))
+		numberWays++;
+	if (numberWays > 1)
+		return true;
+	else return false;
+}
+
+
 // the boulder was defined by its bottom left corner, so I had it check
 // the 4x4 area from that corner and define all of it as a boulder
 bool StudentWorld::isBoulder(int x, int y) {

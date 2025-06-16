@@ -98,22 +98,36 @@ class RegularProtestor : public Protestor {
 private:
 	int numSquaresToMoveInCurrentDirection;
 	bool leaveTheOilField;
+	int ticks;
 public:
-	//TODO: IMPLEMENT CONSTRUCTOR AND CLASS VARS
+	
 	RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	void doAction();
 	virtual ~RegularProtestor();
+	void decideSteps();
+	void getNewDirection();
+	int getSteps() { return numSquaresToMoveInCurrentDirection; };
+	void decreaseSteps() { numSquaresToMoveInCurrentDirection--; };
+	void resetSteps() { numSquaresToMoveInCurrentDirection = 0; };
+	int getTurnTicks() { return ticks; }
+	void resetTurnTicks() { ticks = 0; }
 };
 
 class HardcoreProtestor : public Protestor {
 private:
 	int numSquaresToMoveInCurrentDirection;
 	bool leaveTheOilField;
+	int ticks;
 public:
 	HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	void doAction();
 	virtual ~HardcoreProtestor();
-	//TODO: IMPLEMENT
+	void decideSteps();
+	int getSteps();
+	void decreaseSteps() { numSquaresToMoveInCurrentDirection--; };
+	void resetSteps() { numSquaresToMoveInCurrentDirection = 0; };
+	int getTurnTicks() { return ticks; }
+	void resetTurnTicks() { ticks = 0; }
 };
 
 

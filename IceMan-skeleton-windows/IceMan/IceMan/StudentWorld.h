@@ -47,6 +47,16 @@ public:
 
 	Actor* getIceField();
 
+	bool itemMoveUp(int x, int y);
+
+	bool itemMoveDown(int x, int y);
+
+	bool itemMoveLeft(int x, int y);
+
+	bool itemMoveRight(int x, int y);
+
+	bool atIntersection(int x, int y);
+
 	bool isBoulder(int x, int y);
 
 	bool belowBoulder(int x, int y);

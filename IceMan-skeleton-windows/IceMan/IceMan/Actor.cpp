@@ -493,6 +493,11 @@ Water::Water(int imageID, int startX, int startY, Direction startingDirection, d
 
 }
 
+//Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+//    : IceMan(imageID, startX, startY, startingDirection, size, depth, studentWorld, 10, type) {
+//    setVisible(true);
+//}
+
 void Water::doAction() {
 
     StudentWorld* thisWorld = getWorld();
@@ -684,11 +689,109 @@ void RegularProtestor::doAction() {
     if (isAlive() == false) {
         return;
 	}
+
+    if (getSteps() <= 0) 
+    {
+        getNewDirection();
+    }
+    else if (getWorld()->atIntersection(getX(), getY()) && getTurnTicks() >= 200) 
+    {
+        getNewDirection();
+        resetTurnTicks();
+    }
+    switch (getDirection())
+    {
+    case up:
+        if (getWorld()->itemMoveUp(getX(), getY()))
+        {
+            moveTo(getX(), getY() + 1);
+            decreaseSteps();
+        }
+        else
+            resetSteps();
+        break;
+    case down:
+        if (getWorld()->itemMoveDown(getX(), getY()))
+        {
+            moveTo(getX(), getY() - 1);
+            decreaseSteps();
+        }
+        else
+            resetSteps();
+        break;
+    case left:
+        if (getWorld()->itemMoveLeft(getX(), getY()))
+        {
+            moveTo(getX() - 1, getY());
+            decreaseSteps();
+        }
+        else
+            resetSteps();
+        break;
+    case right:
+        if (getWorld()->itemMoveRight(getX(), getY()))
+        {
+            moveTo(getX() + 1, getY());
+            decreaseSteps();
+        }
+        else
+            resetSteps();
+        break;
+    }
+    
+
+}
+
+
+void RegularProtestor::decideSteps()
+{
+    numSquaresToMoveInCurrentDirection = rand() % 53 + 8;
 }
 
 
 RegularProtestor::~RegularProtestor() {
     
+}
+
+
+void RegularProtestor::getNewDirection() {
+    bool moving = false;
+    while (moving == false)
+    {
+        int direction = rand() % 4;
+        switch (direction)
+        {
+        case 0:
+            if (getWorld()->itemMoveUp(getX(), getY()))
+            {
+                setDirection(up);
+                moving = true;
+            }
+            break;
+        case 1:
+            if (getWorld()->itemMoveDown(getX(), getY()))
+            {
+                setDirection(down);
+                moving = true;
+            }
+            break;
+        case 2:
+            if (getWorld()->itemMoveLeft(getX(), getY()))
+            {
+                setDirection(left);
+                moving = true;
+            }
+            break;
+        case 3:
+            if (getWorld()->itemMoveRight(getX(), getY()))
+            {
+                setDirection(right);
+                moving = true;
+            }
+            break;
+        }
+        decideSteps();
+    }
 }
 
 
@@ -710,6 +813,12 @@ HardcoreProtestor::HardcoreProtestor(int imageID, int startX, int startY, Direct
 
 void HardcoreProtestor::doAction() {
 
+}
+
+
+void HardcoreProtestor::decideSteps()
+{
+    numSquaresToMoveInCurrentDirection = rand() % 53 + 8;
 }
 
 

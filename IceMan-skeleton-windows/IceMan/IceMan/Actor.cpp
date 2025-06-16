@@ -59,7 +59,9 @@ IceMan::IceMan(int imageID, int startX, int startY, Direction startingDirection,
 }
 
 IceMan::~IceMan() {
-
+  /*  if (!this->isAlive()) {
+        delete this;
+    }*/
 }
 
 void IceMan::setNumberOfSquirts(int squirts) {
@@ -320,6 +322,7 @@ void Boulder::doAction() {
 
         if (overlap && iceman->isAlive()) {
             iceman->setHealth(0);
+            iceman->setVisible(false);
             iceman->setAlive(false); // Optionally mark as dead immediately
         }
 
@@ -656,59 +659,64 @@ int Sonar::getTicks() {
 //**************************
 
 
-//RegularProtestor::RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
-//    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
-//{
-//    this->setVisible(true);
-//    setDirection(left);
-//
-//    // Random number of squares to move in current direction (8 to 60)
-//    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
-//
-//    setHealth(5);
-//
-//    leaveTheOilField = false;
-//
-//}
-//
-//
-//void RegularProtestor::doAction() {
-//    if (isAlive() == false) {
-//        return;
-//	}
-//}
-//
-//
-//RegularProtestor::~RegularProtestor() {
-//    
-//}
-//
-//
-//HardcoreProtestor::HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
-//    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
-//{
-//    this->setVisible(true);
-//    setDirection(left);
-//
-//    // Random number of squares to move in current direction (8 to 60)
-//    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
-//
-//    setHealth(20);
-//
-//    leaveTheOilField = false;
-//
-//}
-//
-//
-//void HardcoreProtestor::doAction() {
-//
-//}
-//
-//
-//HardcoreProtestor::~HardcoreProtestor() {
-//
-//}
-//
-//Protestor::~Protestor() {
-//    
-//}
+Protestor::Protestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+    :Human(imageID, startX, startY ,startingDirection, size, depth, studentWorld, health, type) {
+
+}
+
+RegularProtestor::RegularProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
+{
+    this->setVisible(true);
+    setDirection(left);
+
+    // Random number of squares to move in current direction (8 to 60)
+    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
+
+    setHealth(5);
+
+    leaveTheOilField = false;
+
+}
+
+
+void RegularProtestor::doAction() {
+    if (isAlive() == false) {
+        return;
+	}
+}
+
+
+RegularProtestor::~RegularProtestor() {
+    
+}
+
+
+HardcoreProtestor::HardcoreProtestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type)
+    : Protestor(imageID, startX, startY, startingDirection, size, depth, studentWorld, health, type)
+{
+    this->setVisible(true);
+    setDirection(left);
+
+    // Random number of squares to move in current direction (8 to 60)
+    numSquaresToMoveInCurrentDirection = 8 + (rand() % (61 - 8)); // [8, 60]
+
+    setHealth(20);
+
+    leaveTheOilField = false;
+
+}
+
+
+void HardcoreProtestor::doAction() {
+
+}
+
+
+HardcoreProtestor::~HardcoreProtestor() {
+
+}
+
+Protestor::~Protestor() {
+    
+}

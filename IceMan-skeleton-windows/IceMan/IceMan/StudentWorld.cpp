@@ -120,23 +120,23 @@ int StudentWorld::move() {
 	//******************************
 
 
-	//if (ticks >= T && numberOfProtestor < maxNumberOfProtestor) {
-	//	// Decide protestor type
-	//	int randVal = rand() % 100;
-	//	Actor* newProtestor = nullptr;
-	//	if (randVal < probabilityOfHardcore) {
-	//		// Spawn HardcoreProtestor
-	//		newProtestor = new HardcoreProtestor(IID_HARD_CORE_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 20, "hardcoreprotestor");
-	//	}
-	//	else {
-	//		// Spawn RegularProtestor
-	//		newProtestor = new RegularProtestor(IID_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 5, "protestor");
-	//	}
-	//	actionList.push_back(newProtestor);
-	//	ticks = 0;
-	//}
+	if (ticks >= T && numberOfProtestor < maxNumberOfProtestor) {
+		// Decide protestor type
+		int randVal = rand() % 100;
+		Actor* newProtestor = nullptr;
+		if (randVal < probabilityOfHardcore) {
+			// Spawn HardcoreProtestor
+			newProtestor = new HardcoreProtestor(IID_HARD_CORE_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 20, "hardcoreprotestor");
+		}
+		else {
+			// Spawn RegularProtestor
+			newProtestor = new RegularProtestor(IID_PROTESTER, 60, 60, GraphObject::left, 1.0, 0, this, 5, "protestor");
+		}
+		actionList.push_back(newProtestor);
+		ticks = 0;
+	}
 
-	//int numberOfProtesters 
+	int numberOfProtesters;
 	for (Actor* actor : actionList) {
 		if (actor && (actor->getType() == "protestor" || actor->getType() == "hardcoreprotestor") && actor->isAlive())
 			numberOfProtestor++;

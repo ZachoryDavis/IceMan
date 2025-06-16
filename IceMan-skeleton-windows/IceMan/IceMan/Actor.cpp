@@ -1,4 +1,3 @@
-
 #include "Actor.h"
 #include "StudentWorld.h"
 #include <algorithm>
@@ -98,6 +97,7 @@ int IceMan::getNumberOfOil() {
 void IceMan::increaseGold() {
     this->numberOfGoldNuggets++;
 }
+
 //Added boundry checking for boulders
 //Added checking for Ice to remove it if iceman moves over it
 void IceMan::doAction() {
@@ -216,10 +216,19 @@ void IceMan::doAction() {
                 thisWorld->sonarSearch(getX(), getY());
             }
 
+        case KEY_PRESS_SPACE:
+
+            if (numberOfSquirts > 0) {
+                decreaseSquirts();
+                thisWorld->fireSquirt(getX(), getY(), getDirection());
+            }
+            break;
+
         default:
             break;
         }
     }
+
 }
 
 void IceMan::increaseSonar() {
@@ -445,12 +454,15 @@ void Gold::doAction() {
         return;
     }
 }
-//Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
-//    : IceMan(imageID, startX, startY, startingDirection, size, depth, studentWorld, 10, type) {
-//    setVisible(true);
-//}
 
-//void Squirt::doAction() {
+
+//Sonar::Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+//    : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
+//    setVisible(false);
+//}
+//
+//
+//void Sonar::doAction() {
 //    
 //}
 
@@ -518,6 +530,56 @@ Water::~Water() {
 }
 
 
+Squirt::Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
+    :IceMan(imageID, startX, startY, startingDirection, size, depth, studentWorld, 1, type)
+{
+    this->setVisible(true);
+}
+
+
+void Squirt::doAction() {
+        if (!isAlive()) 
+        return;
+
+        if (travelDistance == 0) {
+            setAlive(false);
+            setVisible(false);
+            return;
+        }
+
+        // Calculate next position
+        int nextX = getX();
+        int nextY = getY();
+        switch (getDirection()) {
+        case up:    nextY += 1; break;
+        case down:  nextY -= 1; break;
+        case left:  nextX -= 1; break;
+        case right: nextX += 1; break;
+        default: break;
+        }
+
+        // Check bounds
+        if (nextX < 0 || nextX >= 64 || nextY < 0 || nextY >= 60) {
+            setAlive(false);
+            setVisible(false);
+            return;
+        }
+
+        StudentWorld* world = getWorld();
+        // Check for ice or boulder at next position
+        if (world->isBoulder(nextX, nextY) || world->isIce(nextX, nextY)) {
+            setAlive(false);
+            setVisible(false);
+            return;
+        }
+        
+
+
+        // Move squirt
+        moveTo(nextX, nextY);
+        travelDistance--;
+    
+}
 
 
 Sonar::Sonar(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)

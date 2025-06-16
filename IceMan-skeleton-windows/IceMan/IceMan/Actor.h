@@ -62,6 +62,10 @@ public:
 	void increaseSquirts() {
 		this->numberOfSquirts += 5;
 	}
+	void decreaseSquirts() {
+		if (this->numberOfSquirts > 0)
+			this->numberOfSquirts--;
+	}
 
 	void setNumberOfSonar(int sonars);
 	int getNumberOfSonar();
@@ -76,8 +80,6 @@ public:
 
 	void increaseSonar();
 	int getNumOfSonar();
-
-	
 
 	void doAction();
 
@@ -211,6 +213,7 @@ public:
 
 class Squirt : public IceMan {
 private:
+	int travelDistance = 4;
 public:
 	Squirt(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type);
 	void doAction() override;

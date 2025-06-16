@@ -95,6 +95,8 @@ int StudentWorld::init() {
 		}
 	}
 
+	//int goodie = getLevel() * 30 + 290;
+
 	return GWSTATUS_CONTINUE_GAME;
 }
 
@@ -251,6 +253,14 @@ void StudentWorld::removeIce(int x, int y) {
 }
 
 
+bool StudentWorld::isIce(int x, int y) {
+	if (x < 0 || x >= 64 || y < 0 || y >= 60) {
+		return false; // Out of bounds
+	}
+	return (iceField[x][y] != nullptr && iceField[x][y]->getType() == "ice");
+}
+
+
 bool StudentWorld::sonarSearch(int x, int y) {
 
 	playSound(SOUND_SONAR);
@@ -274,6 +284,19 @@ bool StudentWorld::sonarSearch(int x, int y) {
 	}
 
 	return found;
+}
+
+
+bool StudentWorld::fireSquirt(int x, int y, GraphObject::Direction dir) {
+	if (iceman->getNumberOfSquirts() <= 0) {
+		return false; // No squirts left
+	}
+	// Create a new Squirt actor
+	Squirt* squirt = new Squirt(IID_WATER_SPURT, x, y, dir, 1, 2, this, "squirt");
+	actionList.push_back(squirt);
+	//iceman->decreaseSquirts(); // Decrease the number of squirts
+	playSound(SOUND_PLAYER_SQUIRT);
+	return true;
 }
 
 
@@ -303,18 +326,19 @@ void StudentWorld::decreaseGold() {
 }
 
 void StudentWorld::spawnTickUnits() {
-	int goodieChance = getLevel() * 30 + 290;
+	int goodie = getLevel() * 30 + 290;
+	int goodieChance = rand() % goodie;
 
 	//this works but it took like 2 min for anything to spawn?????
 
 	//this looks so disgusting wtf did i write
 
 	//check for the 1/goodieChance chance that a goodie is spawned
-	if (rand() % goodieChance == 0) {
+	//if (rand() % goodieChance == 0) {
 
-		if (rand() % 5 == 0 && !overlap({ 0, 60 })) { // 1/5 chance that sonar is spawned
+		if (goodieChance == 0 && !overlap({ 0, 59 })) { // 1/5 chance that sonar is spawned
 			//playSound(SOUND_DIG);
-			Sonar* sonar = new Sonar(IID_SONAR, 0, 60, GraphObject::right, 1, 2, this, "sonar");
+			Sonar* sonar = new Sonar(IID_SONAR, 0, 59, GraphObject::right, 1, 2, this, "sonar");
 			actionList.push_back(sonar);
 		}
 		else {				  // 4/5 chance water is spawned
@@ -327,7 +351,7 @@ void StudentWorld::spawnTickUnits() {
 				actionList.push_back(water);
 			}
 		}
-	}
+	//}
 }
 
 

@@ -38,7 +38,11 @@ public:
 
 	void removeIce(int x, int y);
 
+	bool isIce(int x, int y);
+
 	bool sonarSearch(int x, int y);
+
+	bool fireSquirt(int x, int y, GraphObject::Direction dir);
 
 	std::vector<Actor*> getList();
 

@@ -89,6 +89,7 @@ public:
 class Protestor : public Human {
 private:
 	bool visible;
+	int ticksSinceSpawn;
 public:
 	Protestor(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, int health, std::string type);
 	virtual ~Protestor();

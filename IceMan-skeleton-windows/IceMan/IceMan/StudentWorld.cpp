@@ -36,9 +36,9 @@ int StudentWorld::init() {
 			i--;
 		}
 
-		Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
-		//iceField[randomX][randomY] = boulder;
-		actionList.push_back(boulder);
+		//Boulder* boulder = new Boulder(IID_BOULDER, randomX, randomY, GraphObject::down, 1, 1, this, "boulder");
+		////iceField[randomX][randomY] = boulder;
+		//actionList.push_back(boulder);
 	}
 
 	for (int i = 0; i < numberOfOil; i++) {

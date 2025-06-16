@@ -364,7 +364,7 @@ void Goodie::doAction() {
 
 OilBarrel::OilBarrel(int imageID, int startX, int startY, Direction startingDirection, double size, unsigned int depth, StudentWorld* studentWorld, std::string type)
     : Goodie(imageID, startX, startY, startingDirection, size, depth, studentWorld, type) {
-    setVisible(false);
+    setVisible(true);
 }
 
 OilBarrel::~OilBarrel() {
@@ -681,9 +681,7 @@ RegularProtestor::RegularProtestor(int imageID, int startX, int startY, Directio
 
 
 void RegularProtestor::doAction() {
-    if (isAlive() == false) {
-        return;
-	}
+   
 }
 
 
